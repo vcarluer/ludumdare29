@@ -41,6 +41,7 @@ var Game = function (divId) {
 		var tile = 32;
 		this.options = {
 			lang: "en",
+			tileSize: tile,
 			pyxelCrop: {
 				x: 0,
 				y: tile,
