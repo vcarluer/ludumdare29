@@ -1,0 +1,7 @@
+body {
+    background-color: grey;
+}
+#gameDiv, #info {
+    width:100%;
+    text-align: center;
+}
