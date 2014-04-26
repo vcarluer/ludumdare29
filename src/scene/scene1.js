@@ -28,6 +28,9 @@
 	};
 
 	Game.Scene.Scene1.prototype.prepare = function () {
+		// game life time
+		this.planetGoal = 50;
+
 		var self = this;
 		this.game.currentScene = this;
 		this.shipScaleBase = this.game.options.spaceShipHeight / this.game.options.pyxelCrop.height;
@@ -123,7 +126,6 @@
 		};
 
 		this.planetDistance = 0;
-		this.planetGoal = 5;
 
 		this.landingTime = 0;
 		this.landingGoal = 1;
@@ -142,6 +144,46 @@
 		};
 
 		this.state = 0;
+
+		var dialIntro = {
+			text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
+			choices: [
+				{
+					key: 0,
+					text: "continue",
+					callback: function () {
+						self.currentDialog = null;
+					}
+				},
+				{
+					key: 1,
+					text: "test"
+				}
+			]
+		};
+
+		this.setDialog(dialIntro);
+
+		this.registerEvents();
+	};
+
+	Game.Scene.Scene1.prototype.registerEvents = function () {
+		var self = this;
+		this.game.dom.canvas.addEventListener("mousemove", function(evt) {
+			var mousePos = self.getMousePos(self.game.dom.canvas, evt);
+			self.handleMouse(mousePos);
+		}, false);
+
+		this.game.dom.canvas.addEventListener("mouseup", function(evt) {
+			var mousePos = self.getMousePos(self.game.dom.canvas, evt);
+			self.handleMouseClick(mousePos);
+		}, false);
+	};
+
+	Game.Scene.Scene1.prototype.setDialog = function (dialog) {
+		this.currentDialog = dialog;
+		this.choiceShapes = [];
+		this.currentChoice = null;
 	};
 
 	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
@@ -158,7 +200,7 @@
 	};
 
 	Game.Scene.Scene1.prototype.computePlanetCoord = function (deltaTime) {
-		this.planetDistance += deltaTime / 1000;
+		// this.planetDistance += deltaTime / 1000; // Forward is done by gameplay
 		var delta = this.planetDistance / this.planetGoal;
 		if (delta <= 1) {
 			this.planet.x = this.tween(delta, this.planet.base.x, this.planet.target.x);
@@ -261,5 +303,120 @@
 			}
 		}
 
+		this.renderDialog(delta);
+	};
+
+	Game.Scene.Scene1.prototype.renderDialog = function (delta) {
+		var fontSize = 22, fontMargin = 3, fontMarginChoice = 6, xDia = 0, yDia = 0, wDia, hDia, marginX = 10, marginY = 5, paddingX = 10, paddingY = 5, choiceKey, choice;
+		if (this.currentDialog) {
+			xDia = marginX;
+			yDia = marginY;
+			wDia = this.game.options.size - 2 * marginX;
+			hDia = this.game.options.dialogHeight - 2 * marginY;
+			this.game.ctx.fillStyle = "#002a53";
+			this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
+
+			xDia = marginX + paddingX;
+			yDia = marginY + paddingY;
+			this.game.ctx.font = fontSize + "px Arial";
+			this.game.ctx.textAlign = "left";
+			this.game.ctx.textBaseline = "top";
+			this.game.ctx.fillStyle = "#60d8fe";
+			this.wrapText(this.game.ctx, this.currentDialog.text, xDia, yDia, wDia, fontSize + fontMargin);
+
+			xDia = marginX;
+			yDia = this.game.options.size - hDia;
+			this.game.ctx.fillStyle = "#00534c";
+			this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
+
+			xDia = marginX + paddingX;
+			yDia += paddingY;
+			for (choiceKey in this.currentDialog.choices) {
+				if (this.currentDialog.choices.hasOwnProperty(choiceKey)) {
+					choice = this.currentDialog.choices[choiceKey];
+					this.game.ctx.font = fontSize + "px Arial";
+					this.game.ctx.textAlign = "left";
+					this.game.ctx.textBaseline = "top";
+					this.game.ctx.fillStyle = "#06fea3";
+					if (this.currentChoice && this.currentChoice.key === choice.key) {
+						this.game.ctx.fillStyle = "#adfefe";
+					}
+
+					this.game.ctx.fillText(choice.text, xDia, yDia);
+
+					if (!this.choiceShapes[choice.key]) {
+						var metrics = this.game.ctx.measureText(choice.text);
+						this.choiceShapes[choice.key] = {
+							choice: choice,
+							x: xDia,
+							y: yDia,
+							width: metrics.width,
+							height: fontSize
+						}
+					}
+
+					yDia += fontSize + fontMarginChoice;
+				}
+			};
+		}
+	};
+
+	Game.Scene.Scene1.prototype.wrapText = function(context, text, x, y, maxWidth, lineHeight) {
+		var words = text.split(' ');
+		var line = '';
+
+		for(var n = 0; n < words.length; n++) {
+			var testLine = line + words[n] + ' ';
+			var metrics = context.measureText(testLine);
+			var testWidth = metrics.width;
+			if (testWidth > maxWidth && n > 0) {
+				context.fillText(line, x, y);
+				line = words[n] + ' ';
+				y += lineHeight;
+			}
+			else {
+				line = testLine;
+			}
+		}
+		context.fillText(line, x, y);
+	};
+
+	Game.Scene.Scene1.prototype.getMousePos = function(canvas, evt) {
+		var rect = this.game.dom.canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
+	};
+
+	Game.Scene.Scene1.prototype.handleMouse = function(mouse) {
+		var i = 0, shape, choice;
+		if (this.currentDialog) {
+			this.currentChoice = null;
+			if (this.choiceShapes) {
+				for (i = 0; i < this.choiceShapes.length; i++) {
+					shape = this.choiceShapes[i];
+					if (mouse.x > shape.x && mouse.x < shape.x + shape.width && mouse.y > shape.y && mouse.y < shape.y + shape.height) {
+						choice = shape.choice;
+						break;
+					}
+				}
+
+				if (choice) {
+					this.currentChoice = choice;
+				}
+			}
+		}
+	};
+
+	Game.Scene.Scene1.prototype.handleMouseClick = function(mouse) {
+		if (this.currentChoice && this.currentChoice.callback) {
+			if (this.state == 1) {
+				this.planetDistance++;
+			}
+
+			this.currentChoice.callback();
+			this.currentChoice = null;
+		}
 	};
 }());
