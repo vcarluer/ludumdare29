@@ -13,7 +13,7 @@ Mythic "generated"
 -----------
 - Characters. Who are them?
 * Pursue Misfortune
-    A Mercenary / treasure hunter which always fail
+    A Mercenary / treasure hunter which always fail, geologist
 * Carry Danger
     A not so innocent person which carry the real danger
 * Debase power
@@ -21,7 +21,7 @@ Mythic "generated"
 * Malice extravagance
     An extravagant media speaker which cover and cast the event
 * Move dreams
-    A mentalist which have its own agenda
+    A psycholog / mentalist which have its own agenda
 
 
 - Relationship
