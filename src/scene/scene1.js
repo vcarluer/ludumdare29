@@ -98,24 +98,28 @@
 
 		this.planetScale = this.shipScale;
 		this.planet = {
-			x: 0,
-			y: 0,
-			width: this.game.res.images.planet.width * this.planetScale,
-			height: this.game.res.images.planet.height * this.planetScale
 		};
 
+		this.planetScale = this.shipScale;
+		var planetComputeW = this.game.res.images.planet.width * this.planetScale;
+		var planetComputeH = this.game.res.images.planet.height * this.planetScale;
 		this.planet.base = {
-			x: this.planet.width / 4,
-			y: - this.planet.height * 1 / 8,
-			width: this.planet.width / 4,
-			height: this.planet.height / 4
+			x: planetComputeW / 4,
+			y: - planetComputeH * 1 / 8,
+			width: planetComputeW / 4,
+			height: planetComputeH / 4
 		};
+
+		this.planet.x = this.planet.base.x;
+		this.planet.y = this.planet.base.y;
+		this.planet.width = this.planet.base.width;
+		this.planet.height = this.planet.base.height;
 
 		this.planet.target = {
-			x: - this.planet.width / 8,
-			y: - this.planet.height / 2,
-			width: this.planet.width,
-			height: this.planet.height
+			x: - planetComputeW / 8,
+			y: - planetComputeH / 2,
+			width: planetComputeW,
+			height: planetComputeH
 		};
 
 		this.planetDistance = 0;
@@ -128,9 +132,33 @@
 			y: this.game.options.size / 4,
 			scale: 0
 		};
+
+		this.introTime = 0;
+		this.introGoal = 5;
+		this.introInfo = {
+			x: - this.game.options.size / 2,
+			y: this.game.options.size,
+			scale: this.shipScaleBase
+		};
+
+		this.state = 0;
 	};
 
-	Game.Scene.Scene1.prototype.computePlanetCoord = function () {
+	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
+		this.introTime += deltaTime / 1000;
+		var delta = this.introTime / this.introGoal;
+		if (delta <= 1) {
+			this.spaceship.x = this.tween(delta, this.introInfo.x, this.spaceship.xTarget);
+			this.spaceship.y = this.tween(delta, this.introInfo.y, this.spaceship.yTarget);
+		} else {
+			this.spaceship.x = this.spaceship.xTarget;
+			this.spaceship.y = this.spaceship.yTarget
+			this.state = 1;
+		}
+	};
+
+	Game.Scene.Scene1.prototype.computePlanetCoord = function (deltaTime) {
+		this.planetDistance += deltaTime / 1000;
 		var delta = this.planetDistance / this.planetGoal;
 		if (delta <= 1) {
 			this.planet.x = this.tween(delta, this.planet.base.x, this.planet.target.x);
@@ -142,7 +170,7 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			this.planetReached = true;
+			this.state = 2;
 		}
 	};
 
@@ -157,6 +185,7 @@
 			this.spaceship.x = this.landingInfo.x;
 			this.spaceship.y = this.landingInfo.y;
 			this.spaceship.setScale(this.landingInfo.scale);
+			this.state = 3;
 		}
 	};
 
@@ -167,10 +196,18 @@
 	Game.Scene.Scene1.prototype.update = function (delta) {
 		var reactorKey, reactor;
 
-		this.planetDistance += delta / 1000;
-		this.computePlanetCoord();
-		if (this.planetReached) {
-			this.computeSpaceshipLanding(delta);
+		switch (this.state) {
+			case 0:
+				this.intro(delta);
+				break;
+			case 1:
+				this.computePlanetCoord(delta);
+				break;
+			case 2:
+				this.computeSpaceshipLanding(delta);
+				break;
+			default:
+				break;
 		}
 
 		this.game.ctx.clearRect(0, 0, this.game.dom.canvas.width, this.game.dom.canvas.height);
