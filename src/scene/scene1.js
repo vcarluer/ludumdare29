@@ -29,7 +29,7 @@
 
 	Game.Scene.Scene1.prototype.prepare = function () {
 		// game life time
-		this.planetGoal = 50;
+		this.planetGoal = 10;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -154,16 +154,157 @@
 					callback: function () {
 						self.currentDialog = null;
 					}
-				},
-				{
-					key: 1,
-					text: "test"
 				}
 			]
 		};
 
-		this.setDialog(dialIntro);
+		this.crewShapes = {};
+		this.crewShapes.psy = {
+			x: this.getScaledTile(),
+			y: this.getScaledTile()
+		};
 
+		this.crewShapes.pilot = {
+			x: 3 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.crewShapes.techy = {
+			x: 3 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.crewShapes.doc = {
+			x: 5 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship = {};
+		this.ship.leftComm = {
+			x: 0,
+			y: 0
+		};
+		this.ship.leftWing1 = {
+			x: 0,
+			y: this.getScaledTile()
+		};
+
+		this.ship.leftWing2 = {
+			x: 0,
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.leftCockpit = {
+			x: this.getScaledTile(),
+			y: 0
+		};
+
+		this.ship.dinnerRoom = {
+			x: this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.dinnerRoom2 = {
+			x: this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.engine1 = {
+			x: this.getScaledTile(),
+			y: 3 * this.getScaledTile()
+		};
+
+		this.ship.dinnerRoom3 = {
+			x: 2 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.empty1 = {
+			x: 2 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.engine2 = {
+			x: 2 * this.getScaledTile(),
+			y: 3 * this.getScaledTile()
+		};
+
+		this.ship.rightCockpit1 = {
+			x: 3 * this.getScaledTile(),
+			y: 0
+		};
+
+		this.ship.control1 = {
+			x: 3 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.engineControl = {
+			x: 3 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.backHull = {
+			x: 3 * this.getScaledTile(),
+			y: 3 * this.getScaledTile()
+		};
+
+		this.ship.rightCockpit2 = {
+			x: 4 * this.getScaledTile(),
+			y: 0
+		};
+
+		this.ship.control2 = {
+			x: 4 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.empty2 = {
+			x: 4 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.engine3 = {
+			x: 4 * this.getScaledTile(),
+			y: 3 * this.getScaledTile()
+		};
+
+		this.ship.rightCockpit3 = {
+			x: 5 * this.getScaledTile(),
+			y: 0
+		};
+
+		this.ship.medBay1 = {
+			x: 5 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.medBay2 = {
+			x: 5 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.ship.engine4 = {
+			x: 5 * this.getScaledTile(),
+			y: 3 * this.getScaledTile()
+		};
+
+		this.ship.rightComm = {
+			x: 6 * this.getScaledTile(),
+			y: 0
+		};
+
+		this.ship.rightWing1 = {
+			x: 6 * this.getScaledTile(),
+			y: this.getScaledTile()
+		};
+
+		this.ship.rightWing2 = {
+			x: 6 * this.getScaledTile(),
+			y: 2 * this.getScaledTile()
+		};
+
+		this.setDialog(dialIntro);
 		this.registerEvents();
 	};
 
@@ -396,7 +537,7 @@
 			if (this.choiceShapes) {
 				for (i = 0; i < this.choiceShapes.length; i++) {
 					shape = this.choiceShapes[i];
-					if (mouse.x > shape.x && mouse.x < shape.x + shape.width && mouse.y > shape.y && mouse.y < shape.y + shape.height) {
+					if (this.inRect(mouse, shape)) {
 						choice = shape.choice;
 						break;
 					}
@@ -409,7 +550,16 @@
 		}
 	};
 
+	Game.Scene.Scene1.prototype.inShipTile = function (mouse, shape) {
+		return mouse.x > this.spaceship.x + shape.x && mouse.x < this.spaceship.x + shape.x + this.getScaledTile() && mouse.y > this.spaceship.y + shape.y && mouse.y < this.spaceship.y + shape.y + this.getScaledTile();
+	};
+
+	Game.Scene.Scene1.prototype.inRect = function (mouse, shape) {
+		return mouse.x > shape.x && mouse.x < shape.x + shape.width && mouse.y > shape.y && mouse.y < shape.y + shape.height;
+	};
+
 	Game.Scene.Scene1.prototype.handleMouseClick = function(mouse) {
+		var crewKey, crewShape, self = this, handled, shipKey, shipShape;
 		if (this.currentChoice && this.currentChoice.callback) {
 			if (this.state == 1) {
 				this.planetDistance++;
@@ -417,6 +567,74 @@
 
 			this.currentChoice.callback();
 			this.currentChoice = null;
+		} else {
+			if (this.state == 1) {
+				for (crewKey in this.crewShapes) {
+					if (this.crewShapes.hasOwnProperty(crewKey)) {
+						crewShape = this.crewShapes[crewKey];
+						if (this.inShipTile(mouse, crewShape)) {
+							handled = true;
+							var dialTmp = {
+								text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
+								choices: [
+									{
+										key: 0,
+										text: "continue",
+										callback: function () {
+											self.currentDialog = null;
+										}
+									}
+								]
+							};
+
+							this.setDialog(dialTmp);
+						}
+					}
+				}
+
+				if (!handled) {
+					for (shipKey in this.ship) {
+						if (this.ship.hasOwnProperty(shipKey)) {
+							shipShape = this.ship[shipKey];
+							if (this.inShipTile(mouse, shipShape)) {
+								handled = true;
+								var dialTmp = {
+									text: shipKey,
+									choices: [
+										{
+											key: 0,
+											text: "continue",
+											callback: function () {
+												self.currentDialog = null;
+											}
+										}
+									]
+								};
+
+								this.setDialog(dialTmp);
+							}
+						}
+					}
+				}
+
+				if (!handled) {
+					handled = true;
+					var dialTmp = {
+						text: "Distance to planet: " + (this.planetGoal - this.planetDistance),
+						choices: [
+							{
+								key: 0,
+								text: "continue",
+								callback: function () {
+									self.currentDialog = null;
+								}
+							}
+						]
+					};
+
+					this.setDialog(dialTmp);
+				}
+			}
 		}
 	};
 }());
