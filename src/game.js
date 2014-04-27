@@ -69,6 +69,14 @@ var Game = function (divId) {
 			spaceship: "res/spaceship.png"
 		};
 
+		this.res.audioSources = {
+		};
+
+		// loop only work online...
+		this.res.audioSourcesLoop = {
+			music: "res/music.ogg"
+		};
+
 		// Services
 		this.service.imageLoader = new Game.Service.ImageLoader(this);
 		this.service.audioLoader = new Game.Service.AudioLoader(this);
@@ -85,8 +93,22 @@ var Game = function (divId) {
 		var self = this;
 		this.service.canvasLoader.createCanvas();
 		this.service.imageLoader.load(this.res.imagesSources, function () {
-			self.resourceLoaded();
+			self.imagesLoaded();
 		});
+	};
+
+	Game.prototype.imagesLoaded = function () {
+		var self = this;
+		this.service.audioLoader.load(this.res.audioSources, function () {
+			self.audioLoaded();
+		});
+	};
+
+	Game.prototype.audioLoaded = function () {
+		var self = this;
+		this.service.audioLoader.load(this.res.audioSourcesLoop, function () {
+			self.resourceLoaded();
+		}, true);
 	};
 
 	Game.prototype.resourceLoaded = function () {

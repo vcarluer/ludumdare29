@@ -46,6 +46,7 @@
 
 				if (++loaded >= soundCount) {
 					callback();
+					return;
 				}
 			}
 		}

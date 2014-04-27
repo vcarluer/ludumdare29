@@ -32,7 +32,7 @@
 		this.planetGoal = 10;
 
 		// Start state
-		this.state = -1;
+		this.state = 1;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -317,6 +317,9 @@
 		this.planet.y = - planetComputeW * 7 / 11;
 		this.planet.width = planetComputeW;
 		this.planet.height = planetComputeH;
+
+		this.game.res.sounds.music.play();
+		this.restart();
 	};
 
 	Game.Scene.Scene1.prototype.restart = function () {
@@ -360,7 +363,7 @@
 		this.choiceNeeded = true;
 	};
 
-	Game.Scene.Scene1.prototype.noDialog = function (dialog) {
+	Game.Scene.Scene1.prototype.noDialog = function () {
 		this.currentDialog = null;
 		this.currentChoice = null;
 		this.choiceNeeded = false;
@@ -669,7 +672,7 @@
 	Game.Scene.Scene1.prototype.handleMouseClick = function(mouse) {
 		var crewKey, crewShape, self = this, handled, shipKey, shipShape;
 		if (this.currentChoice) {
-			if (this.state == 1 && !this.currentChoice.free) {
+			if (this.state === 1 && !this.currentChoice.free) {
 				this.planetDistance++;
 			}
 
@@ -677,11 +680,12 @@
 			if (this.currentChoice.callback) {
 				this.currentChoice.callback();
 			}
-		} else {
-			if (this.state == -1) {
+		}
+		else {
+			if (this.state === -1) {
 				this.restart();
 			} else {
-				if (this.state == 1) {
+				if (this.state === 1) {
 					if (!this.choiceNeeded) {
 						for (crewKey in this.crewShapes) {
 							if (this.crewShapes.hasOwnProperty(crewKey)) {
