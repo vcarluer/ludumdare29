@@ -32,7 +32,7 @@
 		this.planetGoal = 10;
 
 		// Start state
-		this.state = 2;
+		this.state = 0;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -146,7 +146,7 @@
 			scale: this.shipScaleBase
 		};
 
-		var dialIntro = {
+		this.dialIntro = {
 			text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
 			choices: [
 				{
@@ -311,8 +311,27 @@
 
 		this.game.model.planet = new Game.Model.Planet(this.game);
 
-		this.setDialog(dialIntro);
+		this.setDialog(this.dialIntro);
 		this.registerEvents();
+	};
+
+	Game.Scene.Scene1.prototype.restart = function () {
+		this.state = 0;
+		this.setDialog(this.dialIntro);
+		this.spaceship.setScale(this.shipScaleBase);
+		this.planet.x = this.planet.base.x;
+		this.planet.y = this.planet.base.y;
+		this.planet.width = this.planet.base.width;
+		this.planet.height = this.planet.base.height;
+
+		this.spaceship.x = this.spaceship.xTarget;
+		this.spaceship.y = this.spaceship.yTarget;
+		this.spaceship.width = this.spaceship.widthTarget;
+		this.spaceship.height = this.spaceship.heightTarget;
+
+		this.introTime = 0;
+		this.planetDistance = 0;
+		this.landingTime = 0;
 	};
 
 	Game.Scene.Scene1.prototype.registerEvents = function () {
@@ -407,6 +426,26 @@
 		}
 	};
 
+	Game.Scene.Scene1.prototype.lose = function () {
+		var self = this;
+		this.state = 4;
+		this.setDialog(
+			{
+				text: "What is beneath the surface? You will never know now you are dead.",
+				choices: [
+					{
+						key: 0,
+						free: true,
+						text: "restart",
+						callback: function () {
+							self.restart();
+						}
+					}
+				]
+			}
+		);
+	};
+
 	Game.Scene.Scene1.prototype.tween = function (delta, base, target) {
 		return base + (target - base) * delta;
 	};
@@ -424,8 +463,10 @@
 			case 2:
 				this.computeSpaceshipLanding(delta);
 				break;
-			case 3:
-				this.win = true;
+			case 3: // win state
+				break;
+			case 4: // lose state
+				break;
 			default:
 				break;
 		}
@@ -448,35 +489,37 @@
 			this.planet.height
 		);
 
-		this.game.ctx.drawImage(
-			this.game.res.images.spaceship,
-			this.game.options.pyxelCrop.x,
-			this.game.options.pyxelCrop.y,
-			this.game.options.pyxelCrop.width,
-			this.game.options.pyxelCrop.height,
-			this.spaceship.x,
-			this.spaceship.y,
-			this.spaceship.width,
-			this.spaceship.height
-		);
+		if (!(this.state === 4)) {
+			this.game.ctx.drawImage(
+				this.game.res.images.spaceship,
+				this.game.options.pyxelCrop.x,
+				this.game.options.pyxelCrop.y,
+				this.game.options.pyxelCrop.width,
+				this.game.options.pyxelCrop.height,
+				this.spaceship.x,
+				this.spaceship.y,
+				this.spaceship.width,
+				this.spaceship.height
+			);
 
-		this.game.ctx.drawImage(
-			this.game.res.images.crew,
-			this.game.options.pyxelCrop.x,
-			this.game.options.pyxelCrop.y,
-			this.game.options.pyxelCrop.width,
-			this.game.options.pyxelCrop.height,
-			this.spaceship.x,
-			this.spaceship.y,
-			this.spaceship.width,
-			this.spaceship.height
-		);
+			this.game.ctx.drawImage(
+				this.game.res.images.crew,
+				this.game.options.pyxelCrop.x,
+				this.game.options.pyxelCrop.y,
+				this.game.options.pyxelCrop.width,
+				this.game.options.pyxelCrop.height,
+				this.spaceship.x,
+				this.spaceship.y,
+				this.spaceship.width,
+				this.spaceship.height
+			);
 
-		for (var reactorKey in this.reactors) {
-			if (this.reactors.hasOwnProperty(reactorKey)) {
-				reactor = this.reactors[reactorKey];
-				if (this.getScaledTile() > 0) {
-					this.reactorRenderer.render(delta, reactor.getX(), reactor.getY(), this.getScaledTile(), this.getScaledTile());
+			for (var reactorKey in this.reactors) {
+				if (this.reactors.hasOwnProperty(reactorKey)) {
+					reactor = this.reactors[reactorKey];
+					if (this.getScaledTile() > 0) {
+						this.reactorRenderer.render(delta, reactor.getX(), reactor.getY(), this.getScaledTile(), this.getScaledTile());
+					}
 				}
 			}
 		}

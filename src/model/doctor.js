@@ -41,7 +41,8 @@
 					free: true,
 					text: "Any information on life forms on this planet?",
 					callback: function () {
-						self.scene.setDialog(self.dialogs.lifeForm);
+						// self.scene.setDialog(self.dialogs.lifeForm);
+						self.scene.lose();
 					}
 				}
 			]
