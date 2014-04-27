@@ -26,7 +26,7 @@
 	Game.Model.Icefly.prototype.activate = function () {
 		var self = this;
 		this.scene.setDialog({
-			text: "The Icefly class spaceship is a light transport ship. You commend it from 5 years now. The hull is in fairly good condition. The four Stack industry engines are them brand new, making this ship one of the fastest in this quadrant.",
+			text: "The Icefly class spaceship is a light transport ship. You commend it from five years now. The hull is in fairly good condition. The four Stack industry engines are them brand new, making this ship one of the fastest in this quadrant.",
 			choices: [
 				{
 					text: "continue",

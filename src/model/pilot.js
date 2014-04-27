@@ -80,7 +80,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "The mission can be long",
+					text: "Your are not in charge and the mission can be long",
 					callback: function () {
 						self.selectDialog(self.dialogs.howthat);
 					}
@@ -90,7 +90,7 @@
 
 		this.dialogs.howthat = {
 			branchKey: 1,
-			text: "Forget. I just hope the mission will be short.",
+			text: "Forget it. I just hope the mission will be short.",
 			choices: [
 				{
 					key: 0,
@@ -157,6 +157,7 @@
 			choices: [
 				{
 					key: 0,
+					free: true,
 					text: "continue",
 					callback: function () {
 						self.scene.noDialog();
@@ -215,7 +216,7 @@
 
 		this.dialogs.likeWhat = {
 			branchKey: 3,
-			text: "I don't know, maybe a shameful past. People are talking about a planet which have disappeared in one day and will destroy the empire. Sometimes space tavern stories can be true.",
+			text: "I don't know, maybe a shameful past. People are talking about a planet which have disappeared in one day and will cause the empire destruction. Sometimes space tavern stories can be true.",
 			choices: []
 		};
 

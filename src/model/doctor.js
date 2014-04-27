@@ -90,7 +90,7 @@
 
 		this.dialogs.lifeHostility = {
 			branchKey: 3,
-			text: "I think this can be good for us. If there is water beneath the surface, we may discover a new specy. It would be a hude opportunity!",
+			text: "I think this can be good for us. If there is water beneath the surface, we may discover a new specy. It would be a huge opportunity!",
 			choices: [
 				{
 					key: 0,
@@ -160,10 +160,11 @@
 
 		this.dialogs.custody = {
 			branchKey: 3,
-			text: "The doctor is now out of the game. You inject yourself the anti toxin to the crew. You are now protected from toxin infection on this planet.",
+			text: "The doctor is under custody. You inject yourself the anti toxin to the crew. You are now protected from toxin infection on this planet.",
 			choices: [
 				{
 					key: 0,
+					free: true,
 					text: "continue",
 					callback: function () {
 						self.scene.noDialog();

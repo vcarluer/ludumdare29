@@ -22,7 +22,7 @@
 		var self = this;
 		this.game = game;
 		this.scene = game.currentScene;
-		this.baseEntryText = "Hello. I'm quite busy right now, make quick.";
+		this.baseEntryText = "Hello. I'm quite busy right now, make it quick.";
 		this.alternateEntryText = "Tell me.";
 		this.dialogBranches = [];
 
@@ -96,7 +96,7 @@
 
 		this.dialogs.tell = {
 			branchKey: 2,
-			text: "You know I'm not a military. I am a freelance which works for Stack industry.",
+			text: "You know I'm not a military. I am a freelancer which works for Stack industry.",
 			choices: [
 				{
 					key: 0,
@@ -110,7 +110,7 @@
 
 		this.dialogs.stack = {
 			branchKey: 2,
-			text: "You certainly don't know but Stack industry was a long time working with gaagle. The company which discovered the light speed space travel and which became the Empire 232 years ago.",
+			text: "You certainly don't know but Stack industry was a long time ago working with gaagle. The company which discovered the light speed space travel and which became the Empire 232 years ago.",
 			choices: [
 				{
 					key: 0,
@@ -128,7 +128,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "What do you have to do?",
+					text: "What do you have to do to get this technology?",
 					callback: function () {
 						self.selectDialog(self.dialogs.seeyou);
 					}
@@ -169,7 +169,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "What is the technology on this ship",
+					text: "What is the technology on this ship?",
 					callback: function () {
 						self.selectDialog(self.dialogs.shipTech);
 					}

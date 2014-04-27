@@ -110,7 +110,7 @@
 
 		this.dialogs.paid = {
 			branchKey: 2,
-			text: "I work with people which think aliens are existing. Some are quite crazy and believe in lost planet called Atlantis. But they allow me to work on linguistic. Don't worry there is no link with our today's mission.",
+			text: "I work with people which think aliens are existing. Some are quite crazy and believe in a lost planet called Atlantis. But they allow me to work on linguistic. Don't worry there is no link with our today's mission.",
 			choices: []
 		};
 
@@ -144,7 +144,7 @@
 
 		this.dialogs.nervous = {
 			branchKey: 3,
-			text: "Yes. Particularly the doctor. He should not be used to this kind of missions. The techy is quite nervous too. The pilot seems calm, but in our job we think that being too calm is not a good sign.",
+			text: "Yes. Particularly the doctor. He's certainly not used to this kind of missions. The techy is quite nervous too. The pilot seems calm, but in our job we think that being too calm is not a good sign.",
 			choices: [
 				{
 					key: 0,
