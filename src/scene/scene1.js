@@ -164,24 +164,59 @@
 
 		this.crewShapes = {};
 		this.crewShapes.psy = {
-			x: this.getScaledTile(),
-			y: this.getScaledTile()
+			key: 0,
+			getX: function () {
+				return self.getScaledTile();
+			},
+			getY: function () {
+				return self.getScaledTile();
+			},
+			sy: 1
 		};
 
 		this.crewShapes.pilot = {
-			x: 3 * this.getScaledTile(),
-			y: this.getScaledTile()
+			key: 1,
+			getX: function () {
+				return 3 * self.getScaledTile();
+			},
+			getY: function () {
+				return self.getScaledTile();
+			},
+			sy: 2
 		};
 
 		this.crewShapes.techy = {
-			x: 3 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			key: 2,
+			getX: function () {
+				return 3 * self.getScaledTile();
+			},
+			getY: function () {
+				return 2 * self.getScaledTile();
+			},
+			sy: 3
 		};
 
 		this.crewShapes.doc = {
-			x: 5 * this.getScaledTile(),
-			y: 2 * this.getScaledTile(),
-			item: this.game.model.doctor
+			key: 3,
+			getX: function () {
+				return 5 * self.getScaledTile();
+			},
+			getY: function () {
+				return 2 * self.getScaledTile();
+			},
+			item: this.game.model.doctor,
+			sy: 0
+		};
+
+		this.crewShapes.captain = {
+			key: 4,
+			getX: function () {
+				return 2 * self.getScaledTile();
+			},
+			getY: function () {
+				return 2 * self.getScaledTile();
+			},
+			sy: 4
 		};
 
 		this.ship = {};
@@ -384,7 +419,6 @@
 	};
 
 	Game.Scene.Scene1.prototype.computePlanetCoord = function (deltaTime) {
-		// this.planetDistance += deltaTime / 1000; // Forward is done by gameplay
 		var delta = this.planetDistance / this.planetGoal;
 		if (delta < 1) {
 			this.planet.x = this.tween(delta, this.planet.base.x, this.planet.target.x);
@@ -517,17 +551,7 @@
 				this.spaceship.height
 			);
 
-			this.game.ctx.drawImage(
-				this.game.res.images.crew,
-				this.game.options.pyxelCrop.x,
-				this.game.options.pyxelCrop.y,
-				this.game.options.pyxelCrop.width,
-				this.game.options.pyxelCrop.height,
-				this.spaceship.x,
-				this.spaceship.y,
-				this.spaceship.width,
-				this.spaceship.height
-			);
+			this.renderCrew();
 
 			for (var reactorKey in this.reactors) {
 				if (this.reactors.hasOwnProperty(reactorKey)) {
@@ -577,6 +601,32 @@
 			var titleX = this.game.options.size / 2;
 			var titleY = this.game.options.size / 2;
 			this.game.ctx.fillText("Game Over", titleX, titleY);
+		}
+	};
+
+	Game.Scene.Scene1.prototype.renderCrew = function () {
+		var crewKey, crewShape, sx;
+
+		for (crewKey in this.crewShapes) {
+			if (this.crewShapes.hasOwnProperty(crewKey)) {
+				crewShape = this.crewShapes[crewKey];
+				sx = 0;
+				if (this.selectedCrew && this.selectedCrew.key === crewShape.key) {
+					sx = 1;
+				}
+
+				this.game.ctx.drawImage(
+					this.game.res.images.crew,
+					sx * this.game.options.tileSize,
+					crewShape.sy * this.game.options.tileSize,
+					this.game.options.tileSize,
+					this.game.options.tileSize,
+					this.spaceship.x + crewShape.getX(),
+					this.spaceship.y + crewShape.getY(),
+					this.getScaledTile(),
+					this.getScaledTile()
+				);
+			}
 		}
 	};
 
@@ -668,7 +718,7 @@
 	};
 
 	Game.Scene.Scene1.prototype.handleMouse = function(mouse) {
-		var i = 0, shape, choice, previousChoice = this.currentChoice;
+		var i = 0, shape, choice, previousChoice = this.currentChoice, crewKey, crewShape;
 		if (this.currentDialog) {
 			this.currentChoice = null;
 			if (this.choiceShapes) {
@@ -689,11 +739,25 @@
 
 				}
 			}
+		} else {
+			this.selectedCrew = null;
+			for (crewKey in this.crewShapes) {
+				if (this.crewShapes.hasOwnProperty(crewKey)) {
+					crewShape = this.crewShapes[crewKey];
+					if (this.inShipTileCrew(mouse, crewShape)) {
+						this.selectedCrew = crewShape;
+					}
+				}
+			}
 		}
 	};
 
 	Game.Scene.Scene1.prototype.inShipTile = function (mouse, shape) {
 		return mouse.x > this.spaceship.x + shape.x && mouse.x < this.spaceship.x + shape.x + this.getScaledTile() && mouse.y > this.spaceship.y + shape.y && mouse.y < this.spaceship.y + shape.y + this.getScaledTile();
+	};
+
+	Game.Scene.Scene1.prototype.inShipTileCrew = function (mouse, shape) {
+		return mouse.x > this.spaceship.x + shape.getX() && mouse.x < this.spaceship.x + shape.getX() + this.getScaledTile() && mouse.y > this.spaceship.y + shape.getY() && mouse.y < this.spaceship.y + shape.getY() + this.getScaledTile();
 	};
 
 	Game.Scene.Scene1.prototype.inRect = function (mouse, shape) {
@@ -722,7 +786,7 @@
 						for (crewKey in this.crewShapes) {
 							if (this.crewShapes.hasOwnProperty(crewKey)) {
 								crewShape = this.crewShapes[crewKey];
-								if (this.inShipTile(mouse, crewShape)) {
+								if (this.inShipTileCrew(mouse, crewShape)) {
 									handled = true;
 									if (crewShape.item) {
 										crewShape.item.activate();
