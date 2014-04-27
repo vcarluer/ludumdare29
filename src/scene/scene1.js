@@ -467,7 +467,7 @@
 			yDia = marginY;
 			wDia = this.game.options.size - 2 * marginX;
 			hDia = this.game.options.dialogHeight - 2 * marginY;
-			this.game.ctx.fillStyle = "#002a53";
+			this.game.ctx.fillStyle = "rgba(0, 42, 83, .4)";
 			this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
 
 			xDia = marginX + paddingX;
@@ -479,8 +479,8 @@
 			this.wrapText(this.game.ctx, this.currentDialog.text, xDia, yDia, wDia, fontSize + fontMargin);
 
 			xDia = marginX;
-			yDia = this.game.options.size - hDia;
-			this.game.ctx.fillStyle = "#00534c";
+			yDia = this.game.options.size - hDia - marginY;
+			this.game.ctx.fillStyle = "rgba(0, 83, 76, .4)";
 			this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
 
 			xDia = marginX + paddingX;
