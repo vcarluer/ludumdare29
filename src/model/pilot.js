@@ -108,7 +108,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "Why the Empire would have give you other orders?",
+					text: "Why the Empire would have gave you other orders?",
 					callback: function () {
 						self.selectDialog(self.dialogs.contrary);
 					}
@@ -135,6 +135,7 @@
 						if (Math.random() <= .75) {
 							self.dead = true;
 							self.scene.pilotOK = true;
+							self.dialogBranches = [];
 							self.selectDialog(self.dialogs.mutiny);
 						} else {
 							self.scene.lose("The pilot grab is laser and kills you.");
@@ -152,7 +153,7 @@
 
 		this.dialogs.mutiny = {
 			branchKey: 1,
-			text: "The pilot is now under arrest. You program the auto pilot on the ship, let's hope it's enough to land safely",
+			text: "The pilot is now under arrest. You program the auto pilot on the ship, let's hope it's enough to land safely.",
 			choices: [
 				{
 					key: 0,
@@ -162,6 +163,60 @@
 					}
 				}
 			]
+		};
+
+		this.dialogs.model = {
+			branchKey: 2,
+			text: "dummy",
+			choices: [
+				{
+					key: 0,
+					text: "what is this spaceship model?",
+					callback: function () {
+						self.selectDialog(self.dialogs.firebee);
+					}
+				}
+			]
+		};
+
+		this.dialogs.firebee = {
+			branchKey: 2,
+			text: "I am pretty sure it's a firebee.",
+			choices: []
+		};
+
+		this.dialogs.empire = {
+			branchKey: 3,
+			text: "dummy",
+			choices: [
+				{
+					key: 0,
+					text: "Why does the empire sent a so small team?",
+					callback: function () {
+						self.selectDialog(self.dialogs.sensible);
+					}
+				}
+			]
+		};
+
+		this.dialogs.sensible = {
+			branchKey: 3,
+			text: "I suspect there is sensible information in there. They may want to control it if we find it",
+			choices: [
+				{
+					key: 0,
+					text: "Like what?",
+					callback: function () {
+						self.selectDialog(self.dialogs.likeWhat);
+					}
+				}
+			]
+		};
+
+		this.dialogs.likeWhat = {
+			branchKey: 3,
+			text: "I don't know, maybe a shameful past. People are talking about a planet which have disappeared in one day and will destroy the empire. Sometimes space tavern stories can be true.",
+			choices: []
 		};
 
 		this.reset();
@@ -214,5 +269,7 @@
 		this.dialogs.entry.text = this.baseEntryText;
 		this.setBranch(this.dialogs.exitBase);
 		this.setBranch(this.dialogs.procedure);
+		this.setBranch(this.dialogs.model);
+		this.setBranch(this.dialogs.empire);
 	};
 }());

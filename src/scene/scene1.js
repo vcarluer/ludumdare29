@@ -380,6 +380,7 @@
 		this.game.res.sounds.musiclose.pause();
 		// todo: reset game item states if needed
 		this.game.model.doctor.reset();
+		this.game.model.pilot.reset();
 		this.toxinOK = false;
 		this.pilotOK = false;
 	};
@@ -435,11 +436,17 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			if (this.toxinOK && this.pilotOK) {
-				this.state = 2;
-			} else {
+			if (!this.toxinOK) {
 				this.lose("Just after you've land, a powerful toxin killed all the crew.")
+				return;
 			}
+
+			if (!this.pilotOK) {
+				this.lose("Just after you've land, The pilot took off and fired the spaceship weapons on you.")
+				return;
+			}
+
+			this.state = 2;
 		}
 	};
 

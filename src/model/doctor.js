@@ -148,6 +148,7 @@
 						if (Math.random() <= .75) {
 							self.dead = true;
 							self.scene.toxinOK = true;
+							self.dialogBranches = [];
 							self.selectDialog(self.dialogs.custody);
 						} else {
 							self.scene.lose("The doctor defends himself and kills you.");
