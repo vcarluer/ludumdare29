@@ -29,7 +29,7 @@
 
 	Game.Scene.Scene1.prototype.prepare = function () {
 		// Game life time
-		this.planetGoal = 1;
+		this.planetGoal = 40; // 10 per crew
 
 		// Start state
 		this.state = -1;
@@ -139,7 +139,7 @@
 		};
 
 		this.introTime = 0;
-		this.introGoal = 5;
+		this.introGoal = 3;
 		this.introInfo = {
 			x: - this.game.options.size / 2,
 			y: this.game.options.size,
@@ -147,7 +147,7 @@
 		};
 
 		this.dialIntro = {
-			text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
+			text: "I am Jack Sprow, captain of the icefly. The Empire mothership may have scanned water beneath this planet's surface. Our mission: verify the information and bring a sample.",
 			choices: [
 				{
 					key: 0,
@@ -718,15 +718,17 @@
 	};
 
 	Game.Scene.Scene1.prototype.handleMouse = function(mouse) {
-		var i = 0, shape, choice, previousChoice = this.currentChoice, crewKey, crewShape;
+		var shapeKey, shape, choice, previousChoice = this.currentChoice, crewKey, crewShape;
 		if (this.currentDialog) {
 			this.currentChoice = null;
 			if (this.choiceShapes) {
-				for (i = 0; i < this.choiceShapes.length; i++) {
-					shape = this.choiceShapes[i];
-					if (this.inRect(mouse, shape)) {
-						choice = shape.choice;
-						break;
+				for (shapeKey in this.choiceShapes) {
+					if (this.choiceShapes.hasOwnProperty(shapeKey)) {
+						shape = this.choiceShapes[shapeKey];
+						if (this.inRect(mouse, shape)) {
+							choice = shape.choice;
+							break;
+						}
 					}
 				}
 

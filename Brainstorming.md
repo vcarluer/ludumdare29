@@ -107,3 +107,62 @@ Game time: represent as far the spaceship is to planet
 
 Dialogs
 * NPC Text at top with face on left (jrpg like)
+
+Beneath the surface
+-----------
+What is beneath the surface?
+Inspect Lies
+=> Ruins of an alien civilisation destroyed by the galaxy empire
+There is a mythical story of a very advanced alien planet in our spiral galaxy, a civilisation which disappeared in one day.
+This planet was name Atlantis as a reference to human mythology.
+
+But this planet was real and the empire wiped out a whole alien species to still the technology they didn't want to give.
+It was 242 years ago, the empire was born at this time.
+This year the company Gaagle announced the discovery of light speed space travel.
+This was the beginning of a new era for this company, an era of power and 35 years later the galactic empire raised from the Gaagle foundations.
+
+The mothership scanned water on the planet's surface. This water was in fact water stocked of Atlantis.
+But what the player doesn't know is that there is life on Atlantis.
+Some alien are in cryo sleep in cities, buried under the surface.
+
+Player doesn't know, NPC does and have their own agenda.
+
+The crew danger
+-----------
+* The medic
+** What he knows:
+There is life on Atlantis, alien life. And this are not space worms, but advanced and intelligent life.
+The main terrain medical company has give him a lots of money to get a sample.
+He knows how to quickly access a spot where this life was scanned.
+
+** What he thinks:
+There is no sign of another intelligent life other than human.
+It will be a major discovery for its career if he can bring a sample.
+He can be kill if he doesn't.
+And the captain may not authorize such expedition.
+If he does not, the best thing to do is to kill him.
+But he have to be sure before.
+
+** Game over:
+If he knows he cannot go to the sample he will inject poison with the medbay to the captain.
+Before landing the procedure is to inject anti-toxine to all crew.
+
+** Win:
+Convince him not to go.
+Fight him
+
+** Dialog tree
+Main:
+Life scan? => yes
+    What kind? => don't know
+        What do you think about this possibility? => opportunity
+            Seem to know more => structure entrance, can go and see
+                I agree to go => Glad, time to inject toxine now
+                Water mission is priority => Time to inject anti toxine
+                    Accept => not glad = death
+                    Fight => 75%
+Secondary:
+When incorporated? => this year
+    Where did you work? => In MedCenter the biggest medical company on earth
+What is the procedure? => Inject anti-toxine before landing
+

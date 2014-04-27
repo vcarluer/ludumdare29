@@ -22,39 +22,24 @@
 		var self = this;
 		this.game = game;
 		this.scene = game.currentScene;
+		this.baseEntryText = "Do you feel ok? What can I do for you?";
+		this.alternateEntryText = "Do you feel ok? What can I do for you?";
+		this.dialogBranches = [];
 
 		this.dialogs = {};
 
-		this.dialogs.entry = {
-			text: "Do you feel ok? What can I do for you?",
-			choices: [
-				{
-					key: 0,
-					free: true,
-					text: "Nothing thanks",
-					callback: function () {
-						// self.scene.noDialog();
-						self.scene.lose();
-					}
-				},
-				{
-					key: 1,
-					free: false,
-					text: "Any information on life forms on this planet?",
-					callback: function () {
-						self.scene.setDialog(self.dialogs.lifeForm);
-					}
-				}
-			]
-		};
+		this.dialogs.entry = {};
+		this.dialogs.entry.text = this.baseEntryText;
+		this.dialogs.entry.choices = [];
 
-		this.dialogs.back = {
-			text: "Do you want to know something else captain?",
+		this.dialogs.exitBase = {
+			branchKey: 0,
+			text: "dummy",
 			choices: [
 				{
 					key: 0,
 					free: true,
-					text: "No thanks, see you later.",
+					text: "See you later.",
 					callback: function () {
 						self.scene.noDialog();
 					}
@@ -62,24 +47,83 @@
 			]
 		};
 
-		this.dialogs.lifeForm = {
-			text: "No, all we know is that there is maybe water on this planet, so life is possible.",
+		this.setBranch(this.dialogs.exitBase);
+
+		this.dialogs.lifeScan = {
+			branchKey: 1,
+			text: "dummy",
 			choices: [
 				{
 					key: 0,
-					free: true,
-					text: "OK so we may meet hostility.",
+					text: "Any information on life forms on this planet?",
 					callback: function () {
-						self.scene.setDialog(self.dialogs.back);
+						self.selectDialog(self.dialogs.lifeForm);
+					}
+				}
+			]
+		};
+
+		this.setBranch(this.dialogs.lifeScan);
+
+		this.dialogs.lifeForm = {
+			branchKey: 1,
+			text: "We know is that there is maybe water on this planet, so life is possible.",
+			choices: [
+				{
+					key: 0,
+					text: "So we may meet hostility.",
+					callback: function () {
+						self.scene.noDialog();
 					}
 				}
 			]
 		};
 	};
 
+	Game.Model.Doctor.prototype.setBranch = function (dialog) {
+		this.dialogBranches[dialog.branchKey] = dialog;
+	};
+
+	Game.Model.Doctor.prototype.selectDialog = function (dialog) {
+		var currentDialog;
+		this.setBranch(dialog);
+
+		currentDialog = this.createDialog(dialog.text);
+		this.scene.setDialog(currentDialog);
+	};
+
+	Game.Model.Doctor.prototype.createDialog = function (text) {
+		var i, dialogKey, dialog, choiceKey, choice, dial = {
+			text: text,
+			choices: []
+		};
+
+		for (dialogKey in this.dialogBranches) {
+			if (this.dialogBranches.hasOwnProperty(dialogKey)) {
+				dialog = this.dialogBranches[dialogKey];
+				i = 0;
+				for (choiceKey in dialog.choices) {
+					if (dialog.choices.hasOwnProperty(choiceKey)) {
+						choice = dialog.choices[choiceKey];
+						choice.key = dialog.branchKey + "-" + i;
+						dial.choices[choice.key] = choice;
+						i++;
+					}
+				}
+			}
+		}
+
+		return dial;
+	};
+
 	Game.Model.Doctor.prototype.activate = function (game) {
-		this.scene.setDialog(
-			this.dialogs.entry
-		);
+		var currentDialog = this.createDialog(this.dialogs.entry.text);
+		this.scene.setDialog(currentDialog);
+
+		this.dialogs.entry.text = this.alternateEntryText;
+	};
+
+	Game.Model.Doctor.prototype.reset = function () {
+		this.dialogs.entry.text = this.baseEntryText;
 	};
 }());

@@ -26,7 +26,7 @@
 	Game.Model.Planet.prototype.activate = function () {
 		var self = this;
 		this.scene.setDialog({
-			text: "Distance to planet: " + (this.scene.planetGoal - this.scene.planetDistance),
+			text: "Distance to planet: " + (this.scene.planetGoal - this.scene.planetDistance) + " clics.",
 			choices: [
 				{
 					key: 0,
