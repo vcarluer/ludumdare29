@@ -66,7 +66,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "Isn't it risky?",
+					text: "Isn't it risky with the cliff?",
 					callback: function () {
 						self.selectDialog(self.dialogs.risky);
 					}
@@ -80,7 +80,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "How that?",
+					text: "The mission can be long",
 					callback: function () {
 						self.selectDialog(self.dialogs.howthat);
 					}
@@ -205,7 +205,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "Like what?",
+					text: "What sensible information?",
 					callback: function () {
 						self.selectDialog(self.dialogs.likeWhat);
 					}

@@ -187,3 +187,26 @@ Secondary:
 What is this spaceship model? => I think it's a firebee
 Why does the empire send a so small team? => sensible info
     like? => A shameful past
+
+* The engineer
+Secret: Stak industry bought him to still alien technology.
+He knows they are here and he knows why. It' in the archive onf the company, how gaagle discovered the light speed space travel.
+After analyzing the stolen technology there is a missing part: certainly a worm hole generator.
+
+Game over:
+If the captain refuse the sub mission he will eject in capsule and will destroy the ship
+Killed
+
+Win:
+Accept the mission or fight
+
+* The psy
+Secret: He knows the alien story and is one  of the secret's holder.
+His mission is to reactivate the cryotubes
+
+Game over:
+Let's him alive. Activating the cryotube will be a failure and planet will explose.
+Die
+
+Win:
+Kill him

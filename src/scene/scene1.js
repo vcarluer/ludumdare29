@@ -162,6 +162,7 @@
 
 		this.game.model.doctor = new Game.Model.Doctor(this.game);
 		this.game.model.pilot = new Game.Model.Pilot(this.game);
+		this.game.model.techy = new Game.Model.Techy(this.game);
 
 		this.crewShapes = {};
 		this.crewShapes.psy = {
@@ -195,6 +196,7 @@
 			getY: function () {
 				return 2 * self.getScaledTile();
 			},
+			item: this.game.model.techy,
 			sy: 3
 		};
 
@@ -381,8 +383,10 @@
 		// todo: reset game item states if needed
 		this.game.model.doctor.reset();
 		this.game.model.pilot.reset();
+		this.game.model.techy.reset();
 		this.toxinOK = false;
 		this.pilotOK = false;
+		this.psyOK = false;
 	};
 
 	Game.Scene.Scene1.prototype.registerEvents = function () {
@@ -437,12 +441,12 @@
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
 			if (!this.toxinOK) {
-				this.lose("Just after you've land, a powerful toxin killed all the crew.")
+				this.lose("Just after you've landed, a powerful toxin killed all the crew.")
 				return;
 			}
 
 			if (!this.pilotOK) {
-				this.lose("Just after you've land, The pilot took off and fired the spaceship weapons on you.")
+				this.lose("Just after you've landed, The pilot took off and fired the spaceship's weapons on you.")
 				return;
 			}
 
