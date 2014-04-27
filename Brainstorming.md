@@ -205,8 +205,4 @@ Secret: He knows the alien story and is one  of the secret's holder.
 His mission is to reactivate the cryotubes
 
 Game over:
-Let's him alive. Activating the cryotube will be a failure and planet will explose.
-Die
-
-Win:
-Kill him
+No confidence

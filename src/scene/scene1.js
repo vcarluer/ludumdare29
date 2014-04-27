@@ -29,7 +29,7 @@
 
 	Game.Scene.Scene1.prototype.prepare = function () {
 		// Game life time
-		this.planetGoal = 40; // 10 per crew
+		this.planetGoal = 30;
 
 		// Start state
 		this.state = -1;
@@ -163,6 +163,7 @@
 		this.game.model.doctor = new Game.Model.Doctor(this.game);
 		this.game.model.pilot = new Game.Model.Pilot(this.game);
 		this.game.model.techy = new Game.Model.Techy(this.game);
+		this.game.model.psy = new Game.Model.Psy(this.game);
 
 		this.crewShapes = {};
 		this.crewShapes.psy = {
@@ -173,6 +174,7 @@
 			getY: function () {
 				return self.getScaledTile();
 			},
+			item: this.game.model.psy,
 			sy: 1
 		};
 
@@ -440,13 +442,18 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			if (!this.toxinOK) {
+			/*if (!this.toxinOK) {
 				this.lose("Just after you've landed, a powerful toxin killed all the crew.")
 				return;
 			}
 
 			if (!this.pilotOK) {
 				this.lose("Just after you've landed, The pilot took off and fired the spaceship's weapons on you.")
+				return;
+			}*/
+
+			if (!this.psyOK) {
+				this.lose("With what you found down there, you really needed the psy help to focus. But you didn't forged enough links with him. He lost you.")
 				return;
 			}
 
