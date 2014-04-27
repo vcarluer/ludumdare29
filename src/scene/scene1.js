@@ -325,6 +325,7 @@
 		this.currentDialog = dialog;
 		this.choiceShapes = [];
 		this.currentChoice = null;
+		this.choiceNeeded = true;
 	};
 
 	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
@@ -560,46 +561,27 @@
 
 	Game.Scene.Scene1.prototype.handleMouseClick = function(mouse) {
 		var crewKey, crewShape, self = this, handled, shipKey, shipShape;
-		if (this.currentChoice && this.currentChoice.callback) {
+		if (this.currentChoice) {
 			if (this.state == 1) {
 				this.planetDistance++;
 			}
 
-			this.currentChoice.callback();
+			this.choiceNeeded = false;
+			if (this.currentChoice.callback) {
+				this.currentChoice.callback();
+			}
+
 			this.currentChoice = null;
 		} else {
 			if (this.state == 1) {
-				for (crewKey in this.crewShapes) {
-					if (this.crewShapes.hasOwnProperty(crewKey)) {
-						crewShape = this.crewShapes[crewKey];
-						if (this.inShipTile(mouse, crewShape)) {
-							handled = true;
-							var dialTmp = {
-								text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
-								choices: [
-									{
-										key: 0,
-										text: "continue",
-										callback: function () {
-											self.currentDialog = null;
-										}
-									}
-								]
-							};
-
-							this.setDialog(dialTmp);
-						}
-					}
-				}
-
-				if (!handled) {
-					for (shipKey in this.ship) {
-						if (this.ship.hasOwnProperty(shipKey)) {
-							shipShape = this.ship[shipKey];
-							if (this.inShipTile(mouse, shipShape)) {
+				if (!this.choiceNeeded) {
+					for (crewKey in this.crewShapes) {
+						if (this.crewShapes.hasOwnProperty(crewKey)) {
+							crewShape = this.crewShapes[crewKey];
+							if (this.inShipTile(mouse, crewShape)) {
 								handled = true;
 								var dialTmp = {
-									text: shipKey,
+									text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
 									choices: [
 										{
 											key: 0,
@@ -615,24 +597,49 @@
 							}
 						}
 					}
-				}
 
-				if (!handled) {
-					handled = true;
-					var dialTmp = {
-						text: "Distance to planet: " + (this.planetGoal - this.planetDistance),
-						choices: [
-							{
-								key: 0,
-								text: "continue",
-								callback: function () {
-									self.currentDialog = null;
+					if (!handled) {
+						for (shipKey in this.ship) {
+							if (this.ship.hasOwnProperty(shipKey)) {
+								shipShape = this.ship[shipKey];
+								if (this.inShipTile(mouse, shipShape)) {
+									handled = true;
+									var dialTmp = {
+										text: shipKey,
+										choices: [
+											{
+												key: 0,
+												text: "continue",
+												callback: function () {
+													self.currentDialog = null;
+												}
+											}
+										]
+									};
+
+									this.setDialog(dialTmp);
 								}
 							}
-						]
-					};
+						}
+					}
 
-					this.setDialog(dialTmp);
+					if (!handled) {
+						handled = true;
+						var dialTmp = {
+							text: "Distance to planet: " + (this.planetGoal - this.planetDistance),
+							choices: [
+								{
+									key: 0,
+									text: "continue",
+									callback: function () {
+										self.currentDialog = null;
+									}
+								}
+							]
+						};
+
+						this.setDialog(dialTmp);
+					}
 				}
 			}
 		}
