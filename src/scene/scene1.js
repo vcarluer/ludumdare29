@@ -159,6 +159,8 @@
 			]
 		};
 
+		this.game.model.doctor = new Game.Model.Doctor(this.game);
+
 		this.crewShapes = {};
 		this.crewShapes.psy = {
 			x: this.getScaledTile(),
@@ -177,7 +179,8 @@
 
 		this.crewShapes.doc = {
 			x: 5 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.doctor
 		};
 
 		this.ship = {};
@@ -333,6 +336,8 @@
 
 	Game.Scene.Scene1.prototype.noDialog = function (dialog) {
 		this.currentDialog = null;
+		this.currentChoice = null;
+		this.choiceNeeded = false;
 	};
 
 	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
@@ -456,7 +461,7 @@
 	};
 
 	Game.Scene.Scene1.prototype.renderDialog = function (delta) {
-		var fontSize = 22, fontMargin = 3, fontMarginChoice = 6, xDia = 0, yDia = 0, wDia, hDia, marginX = 10, marginY = 5, paddingX = 10, paddingY = 5, choiceKey, choice;
+		var metrics, fontSize = 22, fontMargin = 3, fontMarginChoice = 6, xDia = 0, yDia = 0, wDia, hDia, marginX = 10, marginY = 5, paddingX = 10, paddingY = 5, choiceKey, choice;
 		if (this.currentDialog) {
 			xDia = marginX;
 			yDia = marginY;
@@ -491,9 +496,9 @@
 					}
 
 					this.game.ctx.fillText(choice.text, xDia, yDia);
+					metrics = this.game.ctx.measureText(choice.text);
 
 					if (!this.choiceShapes[choice.key]) {
-						var metrics = this.game.ctx.measureText(choice.text);
 						this.choiceShapes[choice.key] = {
 							choice: choice,
 							x: xDia,
@@ -501,6 +506,9 @@
 							width: metrics.width,
 							height: fontSize
 						}
+					} else {
+						metrics = this.game.ctx.measureText(choice.text);
+						this.choiceShapes[choice.key].width = metrics.width;
 					}
 
 					yDia += fontSize + fontMarginChoice;
@@ -576,8 +584,6 @@
 			if (this.currentChoice.callback) {
 				this.currentChoice.callback();
 			}
-
-			this.currentChoice = null;
 		} else {
 			if (this.state == 1) {
 				if (!this.choiceNeeded) {
@@ -586,20 +592,9 @@
 							crewShape = this.crewShapes[crewKey];
 							if (this.inShipTile(mouse, crewShape)) {
 								handled = true;
-								var dialTmp = {
-									text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
-									choices: [
-										{
-											key: 0,
-											text: "continue",
-											callback: function () {
-												self.currentDialog = null;
-											}
-										}
-									]
-								};
-
-								this.setDialog(dialTmp);
+								if (crewShape.item) {
+									crewShape.item.activate();
+								}
 							}
 						}
 					}
@@ -610,20 +605,9 @@
 								shipShape = this.ship[shipKey];
 								if (this.inShipTile(mouse, shipShape)) {
 									handled = true;
-									var dialTmp = {
-										text: shipKey,
-										choices: [
-											{
-												key: 0,
-												text: "continue",
-												callback: function () {
-													self.currentDialog = null;
-												}
-											}
-										]
-									};
-
-									this.setDialog(dialTmp);
+									if (shipShape.item) {
+										shipShape.item.activate();
+									}
 								}
 							}
 						}

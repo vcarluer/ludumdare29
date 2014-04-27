@@ -20,7 +20,7 @@
 window.onload = function () {
 	var myGame = new Game("gameDiv");
 	myGame.run();
-}
+};
 
 // Global game var
 var Game = function (divId) {
