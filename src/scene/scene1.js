@@ -28,8 +28,11 @@
 	};
 
 	Game.Scene.Scene1.prototype.prepare = function () {
-		// game life time
+		// Game life time
 		this.planetGoal = 10;
+
+		// Start state
+		this.state = 2;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -142,8 +145,6 @@
 			y: this.game.options.size,
 			scale: this.shipScaleBase
 		};
-
-		this.state = 0;
 
 		var dialIntro = {
 			text: "The main ship may have scanned water beneath the surface. Our mission: verify the information and bring a sample",
@@ -371,6 +372,7 @@
 	};
 
 	Game.Scene.Scene1.prototype.computeSpaceshipLanding = function (deltaTime) {
+		var self = this;
 		this.landingTime += deltaTime / 1000;
 		var delta = this.landingTime / this.landingGoal;
 		if (delta <= 1) {
@@ -382,6 +384,26 @@
 			this.spaceship.y = this.landingInfo.y;
 			this.spaceship.setScale(this.landingInfo.scale);
 			this.state = 3;
+
+			this.setDialog(
+				{
+					text: "The crew was holding too much secrets. Like the hidden water beneath this planet's surface, this people were not what they seem to be.",
+					choices: [
+						{
+							key: 0,
+							free: true,
+							text: "continue...",
+							callback: function () {
+								self.setDialog(
+									{
+										text: "You have succeeded to land safely, alive. The question now is how long will you survive? But this is another story and shall be told another time."
+									}
+								);
+							}
+						}
+					]
+				}
+			);
 		}
 	};
 
@@ -402,6 +424,8 @@
 			case 2:
 				this.computeSpaceshipLanding(delta);
 				break;
+			case 3:
+				this.win = true;
 			default:
 				break;
 		}
@@ -478,42 +502,44 @@
 			this.game.ctx.fillStyle = "#60d8fe";
 			this.wrapText(this.game.ctx, this.currentDialog.text, xDia, yDia, wDia, fontSize + fontMargin);
 
-			xDia = marginX;
-			yDia = this.game.options.size - hDia - marginY;
-			this.game.ctx.fillStyle = "rgba(0, 83, 76, .4)";
-			this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
+			if (this.currentDialog.choices) {
+				xDia = marginX;
+				yDia = this.game.options.size - hDia - marginY;
+				this.game.ctx.fillStyle = "rgba(0, 83, 76, .4)";
+				this.game.ctx.fillRect(xDia, yDia, wDia, hDia);
 
-			xDia = marginX + paddingX;
-			yDia += paddingY;
-			for (choiceKey in this.currentDialog.choices) {
-				if (this.currentDialog.choices.hasOwnProperty(choiceKey)) {
-					choice = this.currentDialog.choices[choiceKey];
-					this.game.ctx.textAlign = "left";
-					this.game.ctx.textBaseline = "top";
-					this.game.ctx.fillStyle = "#06fea3";
-					if (this.currentChoice && this.currentChoice.key === choice.key) {
-						this.game.ctx.fillStyle = "#adfefe";
-					}
-
-					this.game.ctx.fillText(choice.text, xDia, yDia);
-					metrics = this.game.ctx.measureText(choice.text);
-
-					if (!this.choiceShapes[choice.key]) {
-						this.choiceShapes[choice.key] = {
-							choice: choice,
-							x: xDia,
-							y: yDia,
-							width: metrics.width,
-							height: fontSize
+				xDia = marginX + paddingX;
+				yDia += paddingY;
+				for (choiceKey in this.currentDialog.choices) {
+					if (this.currentDialog.choices.hasOwnProperty(choiceKey)) {
+						choice = this.currentDialog.choices[choiceKey];
+						this.game.ctx.textAlign = "left";
+						this.game.ctx.textBaseline = "top";
+						this.game.ctx.fillStyle = "#06fea3";
+						if (this.currentChoice && this.currentChoice.key === choice.key) {
+							this.game.ctx.fillStyle = "#adfefe";
 						}
-					} else {
-						metrics = this.game.ctx.measureText(choice.text);
-						this.choiceShapes[choice.key].width = metrics.width;
-					}
 
-					yDia += fontSize + fontMarginChoice;
+						this.game.ctx.fillText(choice.text, xDia, yDia);
+						metrics = this.game.ctx.measureText(choice.text);
+
+						if (!this.choiceShapes[choice.key]) {
+							this.choiceShapes[choice.key] = {
+								choice: choice,
+								x: xDia,
+								y: yDia,
+								width: metrics.width,
+								height: fontSize
+							}
+						} else {
+							metrics = this.game.ctx.measureText(choice.text);
+							this.choiceShapes[choice.key].width = metrics.width;
+						}
+
+						yDia += fontSize + fontMarginChoice;
+					}
 				}
-			};
+			}
 		}
 	};
 
