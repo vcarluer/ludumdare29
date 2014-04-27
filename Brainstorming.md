@@ -148,7 +148,7 @@ If he knows he cannot go to the sample he will inject poison with the medbay to 
 Before landing the procedure is to inject anti-toxine to all crew.
 
 ** Win:
-Convince him not to go.
+Say you go
 Fight him
 
 ** Dialog tree
@@ -166,3 +166,24 @@ When incorporated? => this year
     Where did you work? => In MedCenter the biggest medical company on earth
 What is the procedure? => Inject anti-toxine before landing
 
+* The pilot
+Secret: Empire knows about the planet and the crew. His mission is to land and abandon the crew.
+He is not a real official Empire pilot but an assassin.
+Game over:
+Land without convincing him
+Win
+Fight him
+
+Dialog tree
+Main:
+Procedure => Land in a protected zone down a cliff
+    Not risky => Won't stay long
+        How that => Just say mission will be short
+            Don't like => Everyone have order
+                Why => Empire traitors on ship
+                    Propose arrest them after => OK but lose
+                    Fight => 75%
+Secondary:
+What is this spaceship model? => I think it's a firebee
+Why does the empire send a so small team? => sensible info
+    like? => A shameful past

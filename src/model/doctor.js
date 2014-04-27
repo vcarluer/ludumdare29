@@ -29,7 +29,6 @@
 		this.dialogs = {};
 
 		this.dialogs.entry = {};
-		this.dialogs.entry.text = this.baseEntryText;
 		this.dialogs.entry.choices = [];
 
 		this.dialogs.exitBase = {
@@ -232,18 +231,11 @@
 			choices: []
 		};
 
-		this.setBranch(this.dialogs.exitBase);
-		this.setBranch(this.dialogs.procedure);
-		this.setBranch(this.dialogs.incorporated);
-		this.setBranch(this.dialogs.lifeScan);
+		this.reset();
 	};
 
 	Game.Model.Doctor.prototype.setBranch = function (dialog) {
 		this.dialogBranches[dialog.branchKey] = dialog;
-	};
-
-	Game.Model.Doctor.prototype.removeBranch = function (key) {
-		this.dialogBranches[key] = null;
 	};
 
 	Game.Model.Doctor.prototype.selectDialog = function (dialog) {

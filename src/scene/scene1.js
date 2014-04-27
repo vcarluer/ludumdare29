@@ -161,6 +161,7 @@
 		};
 
 		this.game.model.doctor = new Game.Model.Doctor(this.game);
+		this.game.model.pilot = new Game.Model.Pilot(this.game);
 
 		this.crewShapes = {};
 		this.crewShapes.psy = {
@@ -182,6 +183,7 @@
 			getY: function () {
 				return self.getScaledTile();
 			},
+			item: this.game.model.pilot,
 			sy: 2
 		};
 
@@ -379,6 +381,7 @@
 		// todo: reset game item states if needed
 		this.game.model.doctor.reset();
 		this.toxinOK = false;
+		this.pilotOK = false;
 	};
 
 	Game.Scene.Scene1.prototype.registerEvents = function () {
@@ -432,7 +435,7 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			if (this.toxinOK) {
+			if (this.toxinOK && this.pilotOK) {
 				this.state = 2;
 			} else {
 				this.lose("Just after you've land, a powerful toxin killed all the crew.")
