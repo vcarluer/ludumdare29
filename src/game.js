@@ -31,6 +31,7 @@ var Game = function (divId) {
 	Game.Service = function(){};
 	Game.Scene = function(){};
 	Game.Renderer = function () {};
+	Game.Model = function () {};
 
 	Game.prototype.init = function (divId) {
 		this.scene = {};
@@ -38,6 +39,7 @@ var Game = function (divId) {
 		this.service = {};
 		this.res = {};
 		this.model = {};
+
 		var tile = 32;
 		this.options = {
 			lang: "en",
@@ -51,7 +53,8 @@ var Game = function (divId) {
 			size: 800,
 			dialogHeight: 150,
 			spaceShipHeight: 400,
-			choiceHeight: 250
+			choiceHeight: 250,
+			font: "spacefont"
 		};
 
 		this.dom.mainDivId = divId;

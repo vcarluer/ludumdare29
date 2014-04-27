@@ -150,9 +150,10 @@
 			choices: [
 				{
 					key: 0,
+					free: true,
 					text: "continue",
 					callback: function () {
-						self.currentDialog = null;
+						self.noDialog();
 					}
 				}
 			]
@@ -304,6 +305,8 @@
 			y: 2 * this.getScaledTile()
 		};
 
+		this.game.model.planet = new Game.Model.Planet(this.game);
+
 		this.setDialog(dialIntro);
 		this.registerEvents();
 	};
@@ -326,6 +329,10 @@
 		this.choiceShapes = [];
 		this.currentChoice = null;
 		this.choiceNeeded = true;
+	};
+
+	Game.Scene.Scene1.prototype.noDialog = function (dialog) {
+		this.currentDialog = null;
 	};
 
 	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
@@ -460,7 +467,7 @@
 
 			xDia = marginX + paddingX;
 			yDia = marginY + paddingY;
-			this.game.ctx.font = fontSize + "px Arial";
+			this.game.ctx.font = fontSize + "px " + this.game.options.font;
 			this.game.ctx.textAlign = "left";
 			this.game.ctx.textBaseline = "top";
 			this.game.ctx.fillStyle = "#60d8fe";
@@ -476,7 +483,6 @@
 			for (choiceKey in this.currentDialog.choices) {
 				if (this.currentDialog.choices.hasOwnProperty(choiceKey)) {
 					choice = this.currentDialog.choices[choiceKey];
-					this.game.ctx.font = fontSize + "px Arial";
 					this.game.ctx.textAlign = "left";
 					this.game.ctx.textBaseline = "top";
 					this.game.ctx.fillStyle = "#06fea3";
@@ -562,7 +568,7 @@
 	Game.Scene.Scene1.prototype.handleMouseClick = function(mouse) {
 		var crewKey, crewShape, self = this, handled, shipKey, shipShape;
 		if (this.currentChoice) {
-			if (this.state == 1) {
+			if (this.state == 1 && !this.currentChoice.free) {
 				this.planetDistance++;
 			}
 
@@ -625,20 +631,7 @@
 
 					if (!handled) {
 						handled = true;
-						var dialTmp = {
-							text: "Distance to planet: " + (this.planetGoal - this.planetDistance),
-							choices: [
-								{
-									key: 0,
-									text: "continue",
-									callback: function () {
-										self.currentDialog = null;
-									}
-								}
-							]
-						};
-
-						this.setDialog(dialTmp);
+						this.game.model.planet.activate();
 					}
 				}
 			}
