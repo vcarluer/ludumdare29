@@ -32,7 +32,7 @@
 		this.planetGoal = 10;
 
 		// Start state
-		this.state = 0;
+		this.state = -1;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -310,9 +310,13 @@
 		};
 
 		this.game.model.planet = new Game.Model.Planet(this.game);
-
-		this.setDialog(this.dialIntro);
 		this.registerEvents();
+
+		// Title screen
+		this.planet.x = - planetComputeW / 4;
+		this.planet.y = - planetComputeW * 7 / 11;
+		this.planet.width = planetComputeW;
+		this.planet.height = planetComputeH;
 	};
 
 	Game.Scene.Scene1.prototype.restart = function () {
@@ -332,6 +336,8 @@
 		this.introTime = 0;
 		this.planetDistance = 0;
 		this.landingTime = 0;
+
+		// todo: reset game item states if needed
 	};
 
 	Game.Scene.Scene1.prototype.registerEvents = function () {
@@ -489,7 +495,7 @@
 			this.planet.height
 		);
 
-		if (!(this.state === 4)) {
+		if (!(this.state === 4) && this.state >= 0) {
 			this.game.ctx.drawImage(
 				this.game.res.images.spaceship,
 				this.game.options.pyxelCrop.x,
@@ -525,6 +531,24 @@
 		}
 
 		this.renderDialog(delta);
+
+		if (this.state === -1) {
+			this.game.ctx.font = 55 + "px " + this.game.options.font;
+			this.game.ctx.textAlign = "center";
+			this.game.ctx.textBaseline = "center";
+			this.game.ctx.fillStyle = "white";
+			var titleX = this.game.options.size / 2;
+			var titleY = this.game.options.size / 2;
+			this.game.ctx.fillText("Beneath the surface", titleX, titleY);
+
+			this.game.ctx.font = 25 + "px " + this.game.options.font;
+			this.game.ctx.textAlign = "center";
+			this.game.ctx.textBaseline = "bottom";
+			this.game.ctx.fillStyle = "white";
+			var titleX = this.game.options.size / 2;
+			var titleY = this.game.options.size;
+			this.game.ctx.fillText("Ludum dare 29 compo - wip", titleX, titleY);
+		}
 	};
 
 	Game.Scene.Scene1.prototype.renderDialog = function (delta) {
@@ -654,37 +678,41 @@
 				this.currentChoice.callback();
 			}
 		} else {
-			if (this.state == 1) {
-				if (!this.choiceNeeded) {
-					for (crewKey in this.crewShapes) {
-						if (this.crewShapes.hasOwnProperty(crewKey)) {
-							crewShape = this.crewShapes[crewKey];
-							if (this.inShipTile(mouse, crewShape)) {
-								handled = true;
-								if (crewShape.item) {
-									crewShape.item.activate();
-								}
-							}
-						}
-					}
-
-					if (!handled) {
-						for (shipKey in this.ship) {
-							if (this.ship.hasOwnProperty(shipKey)) {
-								shipShape = this.ship[shipKey];
-								if (this.inShipTile(mouse, shipShape)) {
+			if (this.state == -1) {
+				this.restart();
+			} else {
+				if (this.state == 1) {
+					if (!this.choiceNeeded) {
+						for (crewKey in this.crewShapes) {
+							if (this.crewShapes.hasOwnProperty(crewKey)) {
+								crewShape = this.crewShapes[crewKey];
+								if (this.inShipTile(mouse, crewShape)) {
 									handled = true;
-									if (shipShape.item) {
-										shipShape.item.activate();
+									if (crewShape.item) {
+										crewShape.item.activate();
 									}
 								}
 							}
 						}
-					}
 
-					if (!handled) {
-						handled = true;
-						this.game.model.planet.activate();
+						if (!handled) {
+							for (shipKey in this.ship) {
+								if (this.ship.hasOwnProperty(shipKey)) {
+									shipShape = this.ship[shipKey];
+									if (this.inShipTile(mouse, shipShape)) {
+										handled = true;
+										if (shipShape.item) {
+											shipShape.item.activate();
+										}
+									}
+								}
+							}
+						}
+
+						if (!handled) {
+							handled = true;
+							this.game.model.planet.activate();
+						}
 					}
 				}
 			}
