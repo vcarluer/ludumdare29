@@ -377,6 +377,8 @@
 		this.game.res.sounds.music.play();
 		this.game.res.sounds.musiclose.pause();
 		// todo: reset game item states if needed
+		this.game.model.doctor.reset();
+		this.toxinOK = false;
 	};
 
 	Game.Scene.Scene1.prototype.registerEvents = function () {
@@ -430,7 +432,11 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			this.state = 2;
+			if (this.toxinOK) {
+				this.state = 2;
+			} else {
+				this.lose("Just after you've land, a powerful toxin killed all the crew.")
+			}
 		}
 	};
 
@@ -472,12 +478,17 @@
 		}
 	};
 
-	Game.Scene.Scene1.prototype.lose = function () {
-		var self = this;
+	Game.Scene.Scene1.prototype.lose = function (optText) {
+		var self = this, txt;
 		this.state = 4;
+		txt = "What is beneath the surface? You will never know now you are dead.";
+		if (optText) {
+			txt = optText + " " + txt;
+		}
+
 		this.setDialog(
 			{
-				text: "What is beneath the surface? You will never know now you are dead.",
+				text: txt,
 				choices: [
 					{
 						key: 0,
@@ -610,22 +621,24 @@
 		for (crewKey in this.crewShapes) {
 			if (this.crewShapes.hasOwnProperty(crewKey)) {
 				crewShape = this.crewShapes[crewKey];
-				sx = 0;
-				if (this.selectedCrew && this.selectedCrew.key === crewShape.key) {
-					sx = 1;
-				}
+				if (!crewShape.item || !crewShape.item.dead) {
+					sx = 0;
+					if (this.selectedCrew && this.selectedCrew.key === crewShape.key) {
+						sx = 1;
+					}
 
-				this.game.ctx.drawImage(
-					this.game.res.images.crew,
-					sx * this.game.options.tileSize,
-					crewShape.sy * this.game.options.tileSize,
-					this.game.options.tileSize,
-					this.game.options.tileSize,
-					this.spaceship.x + crewShape.getX(),
-					this.spaceship.y + crewShape.getY(),
-					this.getScaledTile(),
-					this.getScaledTile()
-				);
+					this.game.ctx.drawImage(
+						this.game.res.images.crew,
+							sx * this.game.options.tileSize,
+							crewShape.sy * this.game.options.tileSize,
+						this.game.options.tileSize,
+						this.game.options.tileSize,
+							this.spaceship.x + crewShape.getX(),
+							this.spaceship.y + crewShape.getY(),
+						this.getScaledTile(),
+						this.getScaledTile()
+					);
+				}
 			}
 		}
 	};
@@ -746,8 +759,10 @@
 			for (crewKey in this.crewShapes) {
 				if (this.crewShapes.hasOwnProperty(crewKey)) {
 					crewShape = this.crewShapes[crewKey];
-					if (this.inShipTileCrew(mouse, crewShape)) {
-						this.selectedCrew = crewShape;
+					if (!crewShape.item || !crewShape.item.dead) {
+						if (this.inShipTileCrew(mouse, crewShape)) {
+							this.selectedCrew = crewShape;
+						}
 					}
 				}
 			}
@@ -788,10 +803,12 @@
 						for (crewKey in this.crewShapes) {
 							if (this.crewShapes.hasOwnProperty(crewKey)) {
 								crewShape = this.crewShapes[crewKey];
-								if (this.inShipTileCrew(mouse, crewShape)) {
-									handled = true;
-									if (crewShape.item) {
-										crewShape.item.activate();
+								if (!crewShape.item || !crewShape.item.dead) {
+									if (this.inShipTileCrew(mouse, crewShape)) {
+										handled = true;
+										if (crewShape.item) {
+											crewShape.item.activate();
+										}
 									}
 								}
 							}

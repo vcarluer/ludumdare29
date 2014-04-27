@@ -47,15 +47,13 @@
 			]
 		};
 
-		this.setBranch(this.dialogs.exitBase);
-
 		this.dialogs.lifeScan = {
-			branchKey: 1,
+			branchKey: 3,
 			text: "dummy",
 			choices: [
 				{
 					key: 0,
-					text: "Any information on life forms on this planet?",
+					text: "Any information about life forms on this planet?",
 					callback: function () {
 						self.selectDialog(self.dialogs.lifeForm);
 					}
@@ -63,25 +61,189 @@
 			]
 		};
 
-		this.setBranch(this.dialogs.lifeScan);
-
 		this.dialogs.lifeForm = {
-			branchKey: 1,
-			text: "We know is that there is maybe water on this planet, so life is possible.",
+			branchKey: 3,
+			text: "The empire mothership have done life scan on the planet. We have detected signatures. This is certainly due to water presence.",
 			choices: [
 				{
 					key: 0,
-					text: "So we may meet hostility.",
+					text: "What is your opinion about life scanned?",
+					callback: function () {
+						self.selectDialog(self.dialogs.lifeKind);
+					}
+				}
+			]
+		};
+
+		this.dialogs.lifeKind = {
+			branchKey: 3,
+			text: "I really don't know. But it could be more than just space worms.",
+			choices: [
+				{
+					key: 0,
+					text: "So we may meet hostility there?",
+					callback: function () {
+						self.selectDialog(self.dialogs.lifeHostility);
+					}
+				}
+			]
+		};
+
+		this.dialogs.lifeHostility = {
+			branchKey: 3,
+			text: "I think this can be good for us. If there is water beneath the surface, we may discover a new specy. It would be a hude opportunity!",
+			choices: [
+				{
+					key: 0,
+					text: "You seem to know more than you say",
+					callback: function () {
+						self.selectDialog(self.dialogs.knowMore);
+					}
+				}
+			]
+		};
+
+		this.dialogs.knowMore = {
+			branchKey: 3,
+			text: "The mothership has scan too structure which must have been build by some kind of intelligent mind. There is clearly what looks like an entrance to basement in the planet. We should go there and see.",
+			choices: [
+				{
+					key: 0,
+					text: "We will go to the scanned basement",
+					callback: function () {
+						self.glad = true;
+						self.selectDialog(self.dialogs.injectToxin);
+					}
+				},
+				{
+					key: 1,
+					text: "The water mission is priority",
+					callback: function () {
+						self.glad = false;
+						self.selectDialog(self.dialogs.injectToxin);
+					}
+				}
+			]
+		};
+
+		this.dialogs.injectToxin = {
+			branchKey: 3,
+			text: "OK it's time now to inject anti toxin to the crew",
+			choices: [
+				{
+					key: 0,
+					text: "Ok let's inject this anti toxin to the crew",
+					callback: function () {
+						if (self.glad) {
+							self.scene.toxinOK = true;
+							self.selectDialog(self.dialogs.toxinInjected);
+						} else {
+							self.scene.lose("The doctor had another plan. He injected you a toxin instead.");
+						}
+					}
+				},
+				{
+					key: 1,
+					text: "You are strange. I put you under custody",
+					callback: function () {
+						if (Math.random() <= .75) {
+							self.dead = true;
+							self.scene.toxinOK = true;
+							self.selectDialog(self.dialogs.custody);
+						} else {
+							self.scene.lose("The doctor defends himself and kills you.");
+						}
+					}
+				}
+			]
+		};
+
+		this.dialogs.custody = {
+			branchKey: 3,
+			text: "The doctor is now out of the game. You inject yourself the anti toxin to the crew. You are now protected from toxin infection on this planet.",
+			choices: [
+				{
+					key: 0,
+					text: "continue",
 					callback: function () {
 						self.scene.noDialog();
 					}
 				}
 			]
 		};
+
+		this.dialogs.toxinInjected = {
+			branchKey: 3,
+			text: "You are now protected from toxin infection on this planet.",
+			choices: []
+		};
+
+		this.dialogs.incorporated = {
+			branchKey: 2,
+			text: "dummy",
+			choices: [
+				{
+					key: 0,
+					text: "When did you entered Empire army?",
+					callback: function () {
+						self.selectDialog(self.dialogs.enteredArmy);
+					}
+				}
+			]
+		};
+
+		this.dialogs.enteredArmy = {
+			branchKey: 2,
+			text: "I entered the army this year after some quick exams. I had an important civil career before.",
+			choices: [
+				{
+					key: 0,
+					text: "Where did you work before?",
+					callback: function () {
+						self.selectDialog(self.dialogs.civilianWork);
+					}
+				}
+			]
+		};
+
+		this.dialogs.civilianWork = {
+			branchKey: 2,
+			text: "I worked in MedCenter, the biggest medical company on earth",
+			choices: []
+		};
+
+		this.dialogs.procedure = {
+			branchKey: 1,
+			text: "dummy",
+			choices: [
+				{
+					key: 0,
+					text: "So, what is the medical procedure before landing?",
+					callback: function () {
+						self.selectDialog(self.dialogs.antitoxin);
+					}
+				}
+			]
+		};
+
+		this.dialogs.antitoxin = {
+			branchKey: 1,
+			text: "The procedure is fair simple. I have to inject anti toxin to the whole crew.",
+			choices: []
+		};
+
+		this.setBranch(this.dialogs.exitBase);
+		this.setBranch(this.dialogs.procedure);
+		this.setBranch(this.dialogs.incorporated);
+		this.setBranch(this.dialogs.lifeScan);
 	};
 
 	Game.Model.Doctor.prototype.setBranch = function (dialog) {
 		this.dialogBranches[dialog.branchKey] = dialog;
+	};
+
+	Game.Model.Doctor.prototype.removeBranch = function (key) {
+		this.dialogBranches[key] = null;
 	};
 
 	Game.Model.Doctor.prototype.selectDialog = function (dialog) {
@@ -125,5 +287,9 @@
 
 	Game.Model.Doctor.prototype.reset = function () {
 		this.dialogs.entry.text = this.baseEntryText;
+		this.setBranch(this.dialogs.exitBase);
+		this.setBranch(this.dialogs.procedure);
+		this.setBranch(this.dialogs.incorporated);
+		this.setBranch(this.dialogs.lifeScan);
 	};
 }());
