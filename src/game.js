@@ -70,11 +70,17 @@ var Game = function (divId) {
 		};
 
 		this.res.audioSources = {
+			mouseover: "res/mouseover.ogg",
+			mouseclick: "res/mouseclick.ogg",
+			win: "res/win.ogg"
 		};
 
 		// loop only work online...
 		this.res.audioSourcesLoop = {
-			music: "res/music.ogg"
+			music: "res/music.ogg",
+			musiclose: "res/musiclose.ogg",
+			alert: "res/alert.ogg",
+			sonar: "res/mouseclick.ogg"
 		};
 
 		// Services

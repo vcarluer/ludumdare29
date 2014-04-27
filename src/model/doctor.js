@@ -33,16 +33,16 @@
 					free: true,
 					text: "Nothing thanks",
 					callback: function () {
-						self.scene.noDialog();
+						// self.scene.noDialog();
+						self.scene.lose();
 					}
 				},
 				{
 					key: 1,
-					free: true,
+					free: false,
 					text: "Any information on life forms on this planet?",
 					callback: function () {
-						// self.scene.setDialog(self.dialogs.lifeForm);
-						self.scene.lose();
+						self.scene.setDialog(self.dialogs.lifeForm);
 					}
 				}
 			]

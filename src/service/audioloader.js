@@ -34,12 +34,11 @@
 
 		for (src in soundSources) {
 			if (soundSources.hasOwnProperty(src)) {
-				sound = document.createElement("audio");
-				sound.setAttribute("id", src);
-				sound.style.display = "none";
-				sound.src = soundSources[src];
+				sound = new Audio(soundSources[src]);
 				if (loop) {
 					sound.loop = true;
+				} else {
+					this.resetAudio(sound);
 				}
 
 				this.game.res.sounds[src] = sound;
@@ -52,5 +51,11 @@
 		}
 
 		callback();
+	};
+
+	Game.Service.AudioLoader.prototype.resetAudio = function (sound) {
+		sound.addEventListener('ended',function(){
+			sound.src = sound.src;
+		});
 	};
 }());

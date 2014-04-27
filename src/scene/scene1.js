@@ -29,10 +29,10 @@
 
 	Game.Scene.Scene1.prototype.prepare = function () {
 		// Game life time
-		this.planetGoal = 10;
+		this.planetGoal = 1;
 
 		// Start state
-		this.state = 1;
+		this.state = -1;
 
 		var self = this;
 		this.game.currentScene = this;
@@ -319,7 +319,6 @@
 		this.planet.height = planetComputeH;
 
 		this.game.res.sounds.music.play();
-		this.restart();
 	};
 
 	Game.Scene.Scene1.prototype.restart = function () {
@@ -340,6 +339,8 @@
 		this.planetDistance = 0;
 		this.landingTime = 0;
 
+		this.game.res.sounds.music.play();
+		this.game.res.sounds.musiclose.pause();
 		// todo: reset game item states if needed
 	};
 
@@ -372,7 +373,7 @@
 	Game.Scene.Scene1.prototype.intro = function (deltaTime) {
 		this.introTime += deltaTime / 1000;
 		var delta = this.introTime / this.introGoal;
-		if (delta <= 1) {
+		if (delta < 1) {
 			this.spaceship.x = this.tween(delta, this.introInfo.x, this.spaceship.xTarget);
 			this.spaceship.y = this.tween(delta, this.introInfo.y, this.spaceship.yTarget);
 		} else {
@@ -385,7 +386,7 @@
 	Game.Scene.Scene1.prototype.computePlanetCoord = function (deltaTime) {
 		// this.planetDistance += deltaTime / 1000; // Forward is done by gameplay
 		var delta = this.planetDistance / this.planetGoal;
-		if (delta <= 1) {
+		if (delta < 1) {
 			this.planet.x = this.tween(delta, this.planet.base.x, this.planet.target.x);
 			this.planet.y = this.tween(delta, this.planet.base.y, this.planet.target.y);
 			this.planet.width = this.tween(delta, this.planet.base.width, this.planet.target.width);
@@ -401,9 +402,10 @@
 
 	Game.Scene.Scene1.prototype.computeSpaceshipLanding = function (deltaTime) {
 		var self = this;
+		this.noDialog();
 		this.landingTime += deltaTime / 1000;
 		var delta = this.landingTime / this.landingGoal;
-		if (delta <= 1) {
+		if (delta < 1) {
 			this.spaceship.x = this.tween(delta, this.spaceship.xTarget, this.landingInfo.x);
 			this.spaceship.y = this.tween(delta, this.spaceship.yTarget, this.landingInfo.y);
 			this.spaceship.setScale(this.tween(delta, this.shipScaleBase, this.landingInfo.scale));
@@ -413,6 +415,7 @@
 			this.spaceship.setScale(this.landingInfo.scale);
 			this.state = 3;
 
+			this.game.res.sounds.win.play();
 			this.setDialog(
 				{
 					text: "The crew was holding too much secrets. Like the hidden water beneath this planet's surface, this people were not what they seem to be.",
@@ -453,6 +456,9 @@
 				]
 			}
 		);
+
+		this.game.res.sounds.music.pause();
+		this.game.res.sounds.musiclose.play();
 	};
 
 	Game.Scene.Scene1.prototype.tween = function (delta, base, target) {
@@ -552,6 +558,26 @@
 			var titleY = this.game.options.size;
 			this.game.ctx.fillText("Ludum dare 29 compo - wip", titleX, titleY);
 		}
+
+		if (this.state === 3) {
+			this.game.ctx.font = 55 + "px " + this.game.options.font;
+			this.game.ctx.textAlign = "center";
+			this.game.ctx.textBaseline = "center";
+			this.game.ctx.fillStyle = "white";
+			var titleX = this.game.options.size / 2;
+			var titleY = this.game.options.size / 2;
+			this.game.ctx.fillText("The End.", titleX, titleY);
+		}
+
+		if (this.state === 4) {
+			this.game.ctx.font = 55 + "px " + this.game.options.font;
+			this.game.ctx.textAlign = "center";
+			this.game.ctx.textBaseline = "center";
+			this.game.ctx.fillStyle = "white";
+			var titleX = this.game.options.size / 2;
+			var titleY = this.game.options.size / 2;
+			this.game.ctx.fillText("Game Over", titleX, titleY);
+		}
 	};
 
 	Game.Scene.Scene1.prototype.renderDialog = function (delta) {
@@ -642,7 +668,7 @@
 	};
 
 	Game.Scene.Scene1.prototype.handleMouse = function(mouse) {
-		var i = 0, shape, choice;
+		var i = 0, shape, choice, previousChoice = this.currentChoice;
 		if (this.currentDialog) {
 			this.currentChoice = null;
 			if (this.choiceShapes) {
@@ -655,7 +681,12 @@
 				}
 
 				if (choice) {
+					if (!previousChoice || (previousChoice.key != choice.key)) {
+						this.game.res.sounds.mouseover.play();
+					}
+
 					this.currentChoice = choice;
+
 				}
 			}
 		}
@@ -678,6 +709,7 @@
 
 			this.choiceNeeded = false;
 			if (this.currentChoice.callback) {
+				this.game.res.sounds.mouseclick.play();
 				this.currentChoice.callback();
 			}
 		}
