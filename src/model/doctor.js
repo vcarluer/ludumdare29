@@ -104,7 +104,7 @@
 
 		this.dialogs.knowMore = {
 			branchKey: 3,
-			text: "The mothership has scan too structure which must have been build by some kind of intelligent mind. There is clearly what looks like an entrance to basement in the planet. We should go there and see.",
+			text: "The mothership has scan too structures which must have been build by some kind of intelligent mind. There is clearly what looks like an entrance to a basement in the planet. We should go there and see.",
 			choices: [
 				{
 					key: 0,
@@ -184,7 +184,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "When did you entered Empire army?",
+					text: "When did you engage in Empire's army?",
 					callback: function () {
 						self.selectDialog(self.dialogs.enteredArmy);
 					}
@@ -194,7 +194,7 @@
 
 		this.dialogs.enteredArmy = {
 			branchKey: 2,
-			text: "I entered the army this year after some quick exams. I had an important civil career before.",
+			text: "I engaged the army this year after some quick exams. I had an important civil career before.",
 			choices: [
 				{
 					key: 0,

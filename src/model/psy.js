@@ -62,7 +62,7 @@
 
 		this.dialogs.psy = {
 			branchKey: 1,
-			text: "You should know we are often in risky exploration missions.",
+			text: "You should know we are often sent in risky exploration missions.",
 			choices: [
 				{
 					key: 0,
@@ -110,7 +110,7 @@
 
 		this.dialogs.paid = {
 			branchKey: 2,
-			text: "I work with people which think aliens are existing in fact. Some are quite crazy but they allow me to work on linguistic. But there is no link with our today's mission.",
+			text: "I work with people which think aliens are existing. Some are quite crazy and believe in lost planet called Atlantis. But they allow me to work on linguistic. Don't worry there is no link with our today's mission.",
 			choices: []
 		};
 

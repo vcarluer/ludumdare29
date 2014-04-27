@@ -29,7 +29,7 @@
 
 	Game.Scene.Scene1.prototype.prepare = function () {
 		// Game life time
-		this.planetGoal = 30;
+		this.planetGoal = 25;
 
 		// Start state
 		this.state = -1;
@@ -147,7 +147,7 @@
 		};
 
 		this.dialIntro = {
-			text: "I am Jack Sprow, captain of the icefly. The Empire mothership may have scanned water beneath this planet's surface. Our mission: verify the information and bring a sample.",
+			text: "You are Jack Sprow, captain of the icefly. The Empire mothership may have scanned water beneath this planet's surface. Your mission: verify this information and bring a sample.",
 			choices: [
 				{
 					key: 0,
@@ -164,6 +164,7 @@
 		this.game.model.pilot = new Game.Model.Pilot(this.game);
 		this.game.model.techy = new Game.Model.Techy(this.game);
 		this.game.model.psy = new Game.Model.Psy(this.game);
+		this.game.model.captain = new Game.Model.Captain(this.game);
 
 		this.crewShapes = {};
 		this.crewShapes.psy = {
@@ -222,132 +223,160 @@
 			getY: function () {
 				return 2 * self.getScaledTile();
 			},
+			item: this.game.model.captain,
 			sy: 4
 		};
+
+		this.game.model.icefly = new Game.Model.Icefly(this.game);
 
 		this.ship = {};
 		this.ship.leftComm = {
 			x: 0,
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 		this.ship.leftWing1 = {
 			x: 0,
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.leftWing2 = {
 			x: 0,
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.leftCockpit = {
 			x: this.getScaledTile(),
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 
 		this.ship.dinnerRoom = {
 			x: this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.dinnerRoom2 = {
 			x: this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.engine1 = {
 			x: this.getScaledTile(),
-			y: 3 * this.getScaledTile()
+			y: 3 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.dinnerRoom3 = {
 			x: 2 * this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.empty1 = {
 			x: 2 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.engine2 = {
 			x: 2 * this.getScaledTile(),
-			y: 3 * this.getScaledTile()
+			y: 3 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightCockpit1 = {
 			x: 3 * this.getScaledTile(),
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 
 		this.ship.control1 = {
 			x: 3 * this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.engineControl = {
 			x: 3 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.backHull = {
 			x: 3 * this.getScaledTile(),
-			y: 3 * this.getScaledTile()
+			y: 3 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightCockpit2 = {
 			x: 4 * this.getScaledTile(),
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 
 		this.ship.control2 = {
 			x: 4 * this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.empty2 = {
 			x: 4 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.engine3 = {
 			x: 4 * this.getScaledTile(),
-			y: 3 * this.getScaledTile()
+			y: 3 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightCockpit3 = {
 			x: 5 * this.getScaledTile(),
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 
 		this.ship.medBay1 = {
 			x: 5 * this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.medBay2 = {
 			x: 5 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.engine4 = {
 			x: 5 * this.getScaledTile(),
-			y: 3 * this.getScaledTile()
+			y: 3 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightComm = {
 			x: 6 * this.getScaledTile(),
-			y: 0
+			y: 0,
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightWing1 = {
 			x: 6 * this.getScaledTile(),
-			y: this.getScaledTile()
+			y: this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.ship.rightWing2 = {
 			x: 6 * this.getScaledTile(),
-			y: 2 * this.getScaledTile()
+			y: 2 * this.getScaledTile(),
+			item: this.game.model.icefly
 		};
 
 		this.game.model.planet = new Game.Model.Planet(this.game);
@@ -386,6 +415,7 @@
 		this.game.model.doctor.reset();
 		this.game.model.pilot.reset();
 		this.game.model.techy.reset();
+		this.game.model.psy.reset();
 		this.toxinOK = false;
 		this.pilotOK = false;
 		this.psyOK = false;
@@ -442,20 +472,6 @@
 			this.planet.y = this.planet.target.y;
 			this.planet.width = this.planet.target.width;
 			this.planet.height = this.planet.target.height;
-			/*if (!this.toxinOK) {
-				this.lose("Just after you've landed, a powerful toxin killed all the crew.")
-				return;
-			}
-
-			if (!this.pilotOK) {
-				this.lose("Just after you've landed, The pilot took off and fired the spaceship's weapons on you.")
-				return;
-			}*/
-
-			if (!this.psyOK) {
-				this.lose("With what you found down there, you really needed the psy help to focus. But you didn't forged enough links with him. He lost you.")
-				return;
-			}
 
 			this.state = 2;
 		}
@@ -474,6 +490,22 @@
 			this.spaceship.x = this.landingInfo.x;
 			this.spaceship.y = this.landingInfo.y;
 			this.spaceship.setScale(this.landingInfo.scale);
+
+			if (!this.toxinOK) {
+				this.lose("Just after you've landed, a powerful toxin killed all the crew.")
+				return;
+			}
+
+			if (!this.pilotOK) {
+				this.lose("Just after you've landed, The pilot took off and fired the spaceship's weapons on you.")
+				return;
+			}
+
+			if (!this.psyOK) {
+				this.lose("With what you found down there, you really needed the psy help to focus. But you didn't forged enough links with him. He lost you.")
+				return;
+			}
+
 			this.state = 3;
 
 			this.game.res.sounds.win.play();

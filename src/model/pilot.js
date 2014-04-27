@@ -104,7 +104,7 @@
 
 		this.dialogs.dontlike = {
 			branchKey: 1,
-			text: "You know, everyone have orders, it's army you should know. Mines are to make this mission a quick one.",
+			text: "You know, everyone have orders, it's army you should know. Mine are to make this mission a quick one.",
 			choices: [
 				{
 					key: 0,
@@ -118,7 +118,7 @@
 
 		this.dialogs.contrary = {
 			branchKey: 1,
-			text: "There are traitors on this ship. I know you aren't. Let me do my job and I take you back with me.",
+			text: "There are traitors on this ship. I know you aren't one. Let me do my job and I take you back with me.",
 			choices: [
 				{
 					key: 0,

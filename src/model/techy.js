@@ -114,7 +114,7 @@
 			choices: [
 				{
 					key: 0,
-					text: "What is the ling between Gaagle and this mission?",
+					text: "What is the link between Gaagle and this mission?",
 					callback: function () {
 						self.selectDialog(self.dialogs.gaagle);
 					}
