@@ -147,7 +147,7 @@
 		};
 
 		this.dialIntro = {
-			text: "You are Jack Sprow, captain of the icefly. The Empire mothership may have scanned water beneath this planet's surface. Your mission: verify this information and bring a sample.",
+			text: "You are Jack Sprow, captain of the icefly. The Empire's mothership may have scanned water beneath this planet's surface. Your mission: verify this information and bring a sample.",
 			choices: [
 				{
 					key: 0,

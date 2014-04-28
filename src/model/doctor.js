@@ -62,7 +62,7 @@
 
 		this.dialogs.lifeForm = {
 			branchKey: 3,
-			text: "The empire mothership have done life scan on the planet. We have detected signatures. This is certainly due to water presence.",
+			text: "The Empire's mothership have done life scan on the planet. We have detected signatures. This is certainly due to water presence.",
 			choices: [
 				{
 					key: 0,
