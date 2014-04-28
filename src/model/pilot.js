@@ -272,6 +272,6 @@
 		this.setBranch(this.dialogs.procedure);
 		this.setBranch(this.dialogs.model);
 		this.setBranch(this.dialogs.empire);
-		self.dead = false;
+		this.dead = false;
 	};
 }());

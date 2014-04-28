@@ -285,6 +285,6 @@
 		this.setBranch(this.dialogs.procedure);
 		this.setBranch(this.dialogs.incorporated);
 		this.setBranch(this.dialogs.lifeScan);
-		self.dead = false;
+		this.dead = false;
 	};
 }());
