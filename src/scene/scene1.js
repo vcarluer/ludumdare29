@@ -644,7 +644,7 @@
 			this.game.ctx.fillStyle = "white";
 			var titleX = this.game.options.size / 2;
 			var titleY = this.game.options.size;
-			this.game.ctx.fillText("Ludum dare 29 compo - wip", titleX, titleY);
+			this.game.ctx.fillText("Ludum dare 29 compo", titleX, titleY);
 		}
 
 		if (this.state === 3) {
