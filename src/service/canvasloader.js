@@ -32,6 +32,12 @@
 		this.game.dom.canvas = canvas;
 		this.game.dom.context = canvas.getContext("2d");
 		this.game.ctx = this.game.dom.context;
-		this.game.ctx.imageSmoothingEnabled= false;
+		if (this.game.ctx.imageSmoothingEnabled) {
+			this.game.ctx.imageSmoothingEnabled = false;
+		}
+
+		if (this.game.ctx.mozImageSmoothingEnabled) {
+			this.game.ctx.mozImageSmoothingEnabled = false;
+		}
 	};
 }());
