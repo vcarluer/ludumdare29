@@ -502,7 +502,7 @@
 			}
 
 			if (!this.psyOK) {
-				this.lose("With what you found down there, you really needed the psy help to focus. But you didn't forged enough links with him. He lost you.")
+				this.lose("With what you found down there, you really needed the psy's help to focus. But you didn't forged enough links with him. He lost you.")
 				return;
 			}
 
