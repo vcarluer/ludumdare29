@@ -173,6 +173,8 @@ Game over:
 Land without convincing him
 Win
 Fight him
+Lose
+No fight him
 
 Dialog tree
 Main:
@@ -195,10 +197,9 @@ After analyzing the stolen technology there is a missing part: certainly a worm 
 
 Game over:
 If the captain refuse the sub mission he will eject in capsule and will destroy the ship
-Killed
 
 Win:
-Accept the mission or fight
+Accept the mission
 
 * The psy
 Secret: He knows the alien story and is one  of the secret's holder.
